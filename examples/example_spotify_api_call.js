@@ -1,4 +1,4 @@
-const api_token = "BQBn0cSSVcNaMGekA-7mdEqfNwFnYgdnVJfX8Pgk_BNIeiRa43g0UN2sgkK8seqDUGpieopYpi90Wp2Tyq5i3luYOgJVK1zWnvwkInEBKrHKgKZyiYVipI3Ccln3kVeoJydHkYSZG643QcTWsyNerenZqsoVC2LmOtUhyXvS0AUKb5_qWlBBxzaCdi74mC0raZ35x9nke2TYyP6x5UoR5Psp4lAUD7S90AujAXf09DBenS0-qrFXz-rq2Jem";
+const api_token = "BQCNGH7fOF9RpBVtSWQ-J4fuDJntN7KGDjO5IfmOheHD24lqM-GpZKMjK-DSubczbR6nT6LTNCWbBfJ-SSELrmvAK-MOsjYk4DjvZ2T2tMa3vyFnPxPxlL_Uo61siXwtrD4iEmXBJmglbPwyxfNPW_kIcjvxkeSyA4Ag_WrMGvBeEGbLlo145Uo1WpLnWicdAAg7m-LoVBeAaZME-lFSHzEznMqHsOmk8eY7Ja6p2-h6TE4Ww0L9CM1ddlE_";
 
 /*
 Client ID
@@ -18,24 +18,45 @@ function getAudioFeatures(song_id){
 			var objectToReturn = {
 				"danceability": response["danceability"],
 				"key": mapNumToKey(response["key"]),
-				"length": response["length"],
+				"length": convertMillisToSeconds(response["duration_ms"]),
 				"tempo": Math.floor(response["tempo"])
 			}
 			return objectToReturn;
 		});
 }
 
-//implementation
-/*
-getAudioFeatures(ID).then(function(props) {
+function getSpotifyFeatures(song_name){
+	//returns the name, ID, and preview link
+	return makeIDRequest(song_name)
+	.then(function(response){
+		var objectToReturn = {
+			"name": response.tracks.items[0]["name"],
+			"id": response.tracks.items[0]["id"],
+			"preview_url": response.tracks.items[0]["preview_url"]
+		}
+		return objectToReturn;
+	});
+}
 
-});
-*/
+function test(){
+	getSpotifyFeatures("Footloose").then(function(props){
+		getAudioFeatures(props["id"]).then(function(properties){
+			console.log(properties);
+		})
+	})
+}
 
 function makeAudioFeaturesRequest(spotify_song_id){
 
 	return $.get({
 			url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + api_token
+			});
+}
+
+function makeIDRequest(song_name){
+
+	return $.get({
+			url: "https://api.spotify.com/v1/search/?q=" + song_name + "&type=track"
 			});
 }
 
