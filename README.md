@@ -1,2 +1,4 @@
 # HelloWorld
-A lit music playlist maker
+A dope/lit/famified music playlist maker
+\#hEAdERS
+\#GetTheToken
