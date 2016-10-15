@@ -1,13 +1,31 @@
-const api_token = "BQDN-2O72sTUuuBOSBCaQCABs2_bsHTZggHmyUspSGppq6in1qgeZx_HSTPw_diN_T6HhKqgaYhymtWRdgD4kTZjH3VLFI0uE5VtCJp3tOqndYrWRgGz5SjPfiOjtz7geJTpSCExBwaxIYOK";
+const api_token = "BQBn0cSSVcNaMGekA-7mdEqfNwFnYgdnVJfX8Pgk_BNIeiRa43g0UN2sgkK8seqDUGpieopYpi90Wp2Tyq5i3luYOgJVK1zWnvwkInEBKrHKgKZyiYVipI3Ccln3kVeoJydHkYSZG643QcTWsyNerenZqsoVC2LmOtUhyXvS0AUKb5_qWlBBxzaCdi74mC0raZ35x9nke2TYyP6x5UoR5Psp4lAUD7S90AujAXf09DBenS0-qrFXz-rq2Jem";
 
-function getAudioFeatures(spotify_song_id, callback){
+function getAudioFeatures(song_id){
+	//returns an object with danceability, key, length, tempo
+	return makeAudioFeaturesRequest(song_id)
+		.then(function(response){
+			var objectToReturn = {
+				"danceability": response["danceability"],
+				"key": mapNumToKey(response["key"]),
+				"length": response["length"],
+				"tempo": Math.floor(response["tempo"])
+			}
+			return objectToReturn;
+		});
+}
 
-	$.get({
-		url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + api_token
-	})
-	.then(function(res){
-		callback(res);
-	})
+//implementation
+/*
+getAudioFeatures(ID).then(function(props) {
+
+});
+*/
+
+function makeAudioFeaturesRequest(spotify_song_id){
+
+	return $.get({
+			url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + api_token
+			});
 }
 
 function convertMillisToSeconds(millis){
@@ -15,6 +33,11 @@ function convertMillisToSeconds(millis){
   var minutes = Math.floor(millis / 60000);
   var seconds = ((millis % 60000) / 1000).toFixed(0);
   return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+}
+
+function mapNumToKey(key_number){
+	const values = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+	return values[key_number];
 }
 
 
