@@ -10,9 +10,6 @@ var io = require('socket.io')(http);
 var passwordHash = require('password-hash');
 var passwordGen = passwordHash.generate;
 
-var MongoClient = require('mongodb').MongoClient;
-var dbUrl = 'mongodb://localhost:27017/TrackMaster';
-
 var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyId = 'a385221958aa41d28ece2005e33a9b20';
 var spotifySecret = '033ff04f6e0b4157a67c1870be6f8945';
