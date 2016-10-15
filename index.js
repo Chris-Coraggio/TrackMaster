@@ -20,8 +20,8 @@ var spotifySecret = '033ff04f6e0b4157a67c1870be6f8945';
 var spotify = new SpotifyWebApi({
     clientId: spotifyId,
     clientSecret: spotifySecret,
-    //redirectUri: "http://trackmaster.me/playlists",
-    redirectUri: "http://localhost:81/playlists",
+    //redirectUri: "http://trackmaster.me/authorize",
+    redirectUri: "http://localhost:81/authorize",
 });
 
 MongoClient.connect(dbUrl, function(err, db) {
@@ -60,14 +60,18 @@ MongoClient.connect(dbUrl, function(err, db) {
         res.redirect(spotify.createAuthorizeURL(scopes, state));
     });
 
-    app.get('/playlists', function(req, res) {
+    app.get('/authorize', function(req, res) {
         spotify.authorizationCodeGrant(req.query.code).then(function(data) {
             spotify.setAccessToken(data.body.access_token);
             spotify.setRefreshToken(data.body.refresh_token);
 
-            spotify.getMe().then(function(data) {
-                console.log(data);
-            });
+            res.redirect('/playlists');
+        });
+    });
+
+    app.get('/playlists', function(req, res) {
+        spotify.getMe().then(function(data) {
+            console.log(data);
         });
     });
 
