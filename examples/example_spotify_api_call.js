@@ -4,6 +4,9 @@ const api_token = "BQBn0cSSVcNaMGekA-7mdEqfNwFnYgdnVJfX8Pgk_BNIeiRa43g0UN2sgkK8s
 Client ID
 a385221958aa41d28ece2005e33a9b20
 
+Secret
+033ff04f6e0b4157a67c1870be6f8945
+
 Sendto URL:
 http://trackmaster.me/playlists
 */
