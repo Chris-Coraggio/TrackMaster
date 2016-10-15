@@ -23,7 +23,7 @@ var spotify = new SpotifyWebApi({
     redirectUri: "http://localhost:81/authorize",
 });
 
-var url = "http://api.musixmatch.com/ws/1.1/track.search?apikey=239ae28847825fe0dd9589afd57032c1&page_size=100&s_artist_rating=desc&s_track_rating=desc";
+var url = "http://api.musixmatch.com/ws/1.1/track.search?apikey=239ae28847825fe0dd9589afd57032c1&page_size=100&s_track_rating=desc";
 var firstTime = true;
 var outOfReg = false;
 var remove;
@@ -34,34 +34,34 @@ function createURL(lyrics,page){
 	var lyricKey = lyrics.replace(/ /g, '%');
 	return url +  "&q_lyrics=" + lyricKey + "&page="+page;
 }
+startQuery("This is my fight song");
 function startQuery(lyrics){
 	var page = 1;
-	while(page <= 5){
+	while(page <= 3){
 		console.log("iterating");
-		if(makeRequest(createURL(lyrics,page),compileToList)==400){
+		if(makeRequest(createURL(lyrics,page),convertJToC)==400){
 			console.log("out of stuff");
 		}
 		page++;
 	}
-	while(page <= 10){
+	while(page <= 5){
 		var newLyricOne = lyrics.substring(0,lyrics.indexOf(" "));
 		var trimmed = lyrics.substring(lyrics.indexOf(" ")+1);
 		var newLyricTwo = trimmed.substring(0,trimmed.indexOf(" "));
 		var newLyrics = newLyricOne + " " + newLyricTwo;
-		console.log(newLyrics);
-		makeRequest(createURL(newLyrics, page),compileToList);
+		//console.log(newLyrics);
+		makeRequest(createURL(newLyrics, page),convertJToC);
 		page++;
 	}
-	console.log("Finished");
 }
 function makeRequest(urlCall,callback){
-	console.log("Requesting");
 	var returnData;
 	var songList = [];
 	var code=0;
 	request({
 		url: urlCall,
-		json: true
+		json: true,
+        async: false
 	}, function(error,response,body){
 		code=response.statusCode;
 		if(!error&&code === 200){
@@ -78,24 +78,10 @@ function makeRequest(urlCall,callback){
 				songList.push(returnData.message.body.track_list[i].track);
 			}
 		}
-		//console.log(songList);
 		callback(songList);
 	});
 }
-function compileToList(songs){
-	console.log("compiling");
-	//console.log(songs);
-	for(var i=0;i<songs.length;i++){
-		compiledList.push(songs[i]);
-		console.log(songs[i].track_name);
-	}
-}
-function printList(){
-	console.log("Printing");
-	for(var i=0;i<compiledList.length;i++){
-		console.log(compiledList[i].track_name);
-	}
-}
+
 function trimName(song){
 	var remove = song;
 	if(remove.includes('('))
@@ -117,13 +103,37 @@ var options = {
     query: 'Instruments used in heathens by the 21 pilots wikipedia',
     limit: 1
 };
-
-var songList = [{
+var song = {
     title: "Heathens",
     author: "21 Pilots",
-    score: 0
-}]
+    score: 0,
+    previewLink: ""
+};
+var songList = [];
+function convertJToC(songs){
+    var song = {
+        title: "Heathens",
+        author: "21 Pilots",
+        score: 0,
+        previewLink: ""
+    };
 
+    for(var i=0;i<songs.length;i++){
+        var songToAdd = Object.create(song);
+        var songName = songs[i].track_name;
+
+        if(songName.includes(' (')){
+            songName = songName.substring(0,songName.indexOf(' ('));
+        }else if(songName.includes('(')){
+            songName = songName.substring(0,songName.indexOf('('));
+        }
+        songToAdd.title = songName;
+        songToAdd.author = songs[i].artist_name;
+        songList.push(songToAdd);
+
+        console.log(songList[i]);
+    }
+}
 function loadInstruments(callback){
      fs.readFile('instruments.txt','utf8', function(err, data){
 	if(err){
@@ -158,7 +168,7 @@ function checkSongs(songList, songMultiplier){
                     }
 
                     song.score += instrCount * songMultiplier;
-                    console.log(songList);
+                    //console.log(songList);
                 });
                 
             }
