@@ -1,9 +1,8 @@
 var scraper = require('google-search-scraper');
 var request = require('request');
-var reader = require('node-readability');
 var realLimit = 1;
 var currentScrapes = 0;
-fs = require('fs');
+var fs = require('fs');
 var instrumentList
 
 var options = {
@@ -31,44 +30,37 @@ function loadInstruments(callback){
 function checkSongs(songList, songMultiplier){
 
     for(var song of songList){
-	
-	var search = {
-	    query: 'Instruments used in ' + song.title + ' by ' + song.author,
-	    limit: 1
-	};
-	scraper.search(options, function(err, url){
-	if(realLimit > currentScrapes){
-	    if(err) throw err;
-	    console.log(url);
-	    
-	    request(url, function(error, response, body){
-		//console.log(body);
-		var instrCount = 0;
-		instrumentTxt = body.slice(body.indexOf("Edit section: Personnel"));
-		console.log(instrumentTxt);
-		for(var i in instrumentList){
-		    console.log(instrumentList[i]);
-		    if(instrumentTxt.includes(instrumentList[i])){
-			instrCount ++;
-		    }
-		    
-		   
-		    
-		}
-		song.score += instrCount * songMultiplier;
-		//	    var articleData = unfluff.lazy(body, 'en');
-//	    console.log(articleData.text());
-		console.log(songList);
-	    });
-	    
-	}
-	    currentScrapes ++;
-	    
-	});
+        var search = {
+            query: 'Instruments used in ' + song.title + ' by ' + song.author,
+            limit: 1
+        };
+        scraper.search(options, function(err, url){
+            if(realLimit > currentScrapes){
+                if(err) throw err;
+                console.log(url);
+                
+                request(url, function(error, response, body){
+                    var instrCount = 0;
+                    instrumentTxt = body.slice(body.indexOf("Edit section: Personnel"));
+                    console.log(instrumentTxt);
+                    for(var i in instrumentList){
+                        console.log(instrumentList[i]);
+                        if(instrumentTxt.includes(instrumentList[i])){
+                        instrCount ++;
+                        }
+                    }
+
+                    song.score += instrCount * songMultiplier;
+                    console.log(songList);
+                });
+                
+            }
+            currentScrapes ++;
+            
+        });
     }
-//    sleep(20);
-    
 }
+
 loadInstruments(function(){
     checkSongs(songList, 1);}
 );
