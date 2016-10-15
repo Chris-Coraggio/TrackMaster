@@ -1,0 +1,24 @@
+{
+  "name": "trackmatcher",
+  "version": "0.0.1",
+  "description": "Playlist maker that is information orientated",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chris-Coraggio/HelloWorld.git"
+  },
+  "author": "QuadfectaGonnaWreckYa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chris-Coraggio/HelloWorld/issues"
+  },
+  "homepage": "https://github.com/Chris-Coraggio/HelloWorld#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mongodb": "^2.2.10",
+    "socket.io": "^1.5.0"
+  }
+}
