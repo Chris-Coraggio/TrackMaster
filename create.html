@@ -1,0 +1,152 @@
+<html>
+	<head>
+		<title>TrackMaster</title>
+
+		<link rel="stylesheet" href="css/style.css">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+		<!-- Our theme -->
+		<link href="https://fonts.googleapis.com/css?family=Lato|Montserrat" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="/css/style.css">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src = "https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	</head>
+
+	<body>
+
+		<div id="content">
+
+			<div id="banner">
+				<h1>Trackmaster</h1>
+				<p id="welcome">
+	                Welcome NAME!
+	            </p>
+			</div>
+
+			<div id="selector" class="container">
+
+				<div class="row" id="headers-row">
+					<div class="col-md-4">
+						<p class="header">Search By</p>
+					</div>
+					<div class="col-md-4">
+						<p class="header"></p>
+					</div>
+					<div class="col-md-4">
+						<p class="header">Importance Rank</p>
+					</div>
+				</div>
+
+				<div class="row" id="lyrics-row">
+					<div class="col-md-4">
+						<p>Lyrics:</p>
+					</div>
+					<div class="col-md-4">
+						<input id="lyrics" type="text">
+					</div>
+					<div class="col-md-4">
+						<input type="range" min="0.5" max="2.0">
+					</div>
+				</div>
+
+				<div class="row" id="instr-row">
+					<div class="col-md-4">
+						<p>Instrument:</p>
+					</div>
+					<div class="col-md-4">
+						<select id="instr-dropdown"></select>
+					</div>
+					<div class="col-md-4">
+						<input type="range" min="0.5" max="2.0">
+					</div>
+				</div>
+
+				<div class="row" id="tempo-row">
+					<div class="col-md-4">
+						<p>Tempo:</p>
+					</div>
+					<div class="col-md-4">
+						<label>Turtle Slow</label>
+						<input type="range" min="60" max="200">
+						<label>Rabbit on Coffee Fast</label>
+					</div>
+					<div class="col-md-4">
+						<input type="range" min="0.5" max="2.0">
+					</div>
+				</div>
+
+				<div class="row" id="length-row">
+					<div class="col-md-4">
+						<p>Song Length:</p>
+					</div>
+					<div class="col-md-4">
+						<input id="minutes_song" type="text">
+						<label>:</label>
+						<input id="seconds_song" type="text">
+					</div>
+					<div class="col-md-4">
+						<input type="range" min="0.5" max="2.0">
+					</div>
+				</div>
+
+				<div class="row" id="keys-row">
+					<div class="col-md-4">
+						<p>Key:</p>
+					</div>
+					<div class="col-md-4">
+						<select id="key-dropdown"></select>
+						<script>
+						const keys = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+						keys.forEach(function(key){
+							$("#key-dropdown").append("<option>" + key + "</option>");
+						});
+						</script>
+					</div>
+					<div class="col-md-4">
+						<input type="range" min="0.5" max="2.0">
+					</div>
+				</div>
+
+				<div class="row" id="dance-row">
+					<div class="col-md-4">
+						<p>Wanna dance?</p>
+					</div>
+					<div class="col-md-4">
+						<label>I Don't Dance</label>
+						<input type="range" min="0.0" max="1.0">
+						<label>Let's go!</label>
+					</div>
+					<div class="col-md-4">
+						<input type="range" min="0.5" max="2.0">
+					</div>
+				</div>
+
+				<div id="row">
+					<p>How long is your dream playlist?</p>
+					<input id="minutestotal" type="text">
+					<label>:</label>
+					<input id="secondstotal" type="text">
+				</div>
+
+			</div>
+
+			<button id="create-btn">
+			Make My Playlist!
+			</button>
+
+			<div id="playlist-results"></div>
+
+		</div>
+
+		<!-- Code starts here -->
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+		<script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+		<script src = "js/servercomm.js"></script>
+	</body>
+</html>
