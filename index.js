@@ -21,64 +21,57 @@ var spotify = new SpotifyWebApi({
     redirectUri: "http://localhost:81/authorize",
 });
 
-MongoClient.connect(dbUrl, function(err, db) {
-    if (err) {
-        console.log("Unable to connect to DB: ", err);
-        return;
+io.on('connection',function(client){
+    console.log("user connected");
+});
+
+// Set up session
+app.use(session({
+    secret: 'TrackMasterIsTheBombFuckItShipItImNotGonnaMakeARandomString',
+    cookie: {
+        maxAge: 60000
     }
+}));
 
-    io.on('connection',function(client){
-        console.log("user connected");
+// Set up body parser
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+// Basic pages
+app.get('/', function(req, res){
+    var scopes = [
+        'playlist-read-private',
+        'playlist-read-collaborative',
+        'playlist-modify-public',
+        'playlist-modify-private',
+    ];
+
+    var state = "I'm not sure what to put here";
+    res.redirect(spotify.createAuthorizeURL(scopes, state));
+});
+
+app.get('/landing', function(req, res) {
+    return res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/authorize', function(req, res) {
+    spotify.authorizationCodeGrant(req.query.code).then(function(data) {
+        spotify.setAccessToken(data.body.access_token);
+        spotify.setRefreshToken(data.body.refresh_token);
+
+        res.redirect('/playlists');
     });
+});
 
-    // Set up session
-    app.use(session({
-        secret: 'TrackMasterIsTheBombFuckItShipItImNotGonnaMakeARandomString',
-        cookie: {
-            maxAge: 60000
-        }
-    }));
-
-    // Set up body parser
-    app.use(bodyParser.urlencoded({
-        extended: true
-    }));
-
-    // Basic pages
-    app.get('/', function(req, res){
-        var scopes = [
-            'playlist-read-private',
-            'playlist-read-collaborative',
-            'playlist-modify-public',
-            'playlist-modify-private',
-        ];
-
-        var state = "I'm not sure what to put here";
-        res.redirect(spotify.createAuthorizeURL(scopes, state));
+app.get('/playlists', function(req, res) {
+    spotify.getMe().then(function(data) {
+        console.log(data);
     });
+});
 
-    app.get('/landing', function(req, res) {
-        return res.sendFile(__dirname + '/index.html');
-    });
+app.use(express.static('Public'));
 
-    app.get('/authorize', function(req, res) {
-        spotify.authorizationCodeGrant(req.query.code).then(function(data) {
-            spotify.setAccessToken(data.body.access_token);
-            spotify.setRefreshToken(data.body.refresh_token);
-
-            res.redirect('/playlists');
-        });
-    });
-
-    app.get('/playlists', function(req, res) {
-        spotify.getMe().then(function(data) {
-            console.log(data);
-        });
-    });
-
-    app.use(express.static('Public'));
-
-    http.listen(process.env.PORT || 81, function(){
-        console.log("Listening on *:81");
-    });
+http.listen(process.env.PORT || 81, function(){
+    console.log("Listening on *:81");
 });
