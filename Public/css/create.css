@@ -2,30 +2,64 @@
 **------CREATE PAGE-------
 **----------------------*/
 
-
 html, body {
     font-family: Lato;
 }
 
-#content{
-	background: #3d3d5c;
-	background-image: none !important;
+#content {
+	background: url("/img/bg2.jpg");
+    background-size: cover;
+    background-position: center;
 	color: white;
+}
+
+#main-content {
+    margin-top: 1.5em;
+}
+
+.row p {
+    letter-spacing: 2px;
 }
 
 .header{
 	text-align: center;
-	text-decoration: underline;
 }
 
 .col-md-4 > p:first-child{
-	font-weight: bold;
 	font-size: 20pt;
 }
 
-.row{
-	/*margin-top: 1.9vh;
-	margin-bottom: 1.9vh;*/
+#selector #headers-row p {
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+#selector .row {
+    margin: 2em 10em;
+    padding: 2em 1em;
+    background: rgba(0, 0, 0, 0.75);
+    box-shadow: 0 2px 5px #4286f4;
+}
+
+input[type="text"] {
+    font-size: 1.4em;
+    height: 2.5em;
+
+    color: white;
+    background: transparent;
+}
+
+#selector .row p {
+    color: white;
+}
+
+label {
+    color: #ddd;
+
+    font-family: Montserrat;
+    font-weight: normal;
+    font-size: 1.5em;
 }
 
 .col-md-4 > .row {
@@ -34,29 +68,55 @@ html, body {
 }
 
 #minutes_song, #seconds_song{
-	width: 30px;
+    display: inline-block;
+    margin: 0.2em;
+	width: 8em;
 	text-align: center;
 }
 
 #lyrics, #instr-dropdown, #key-dropdown{
 	width: 100%;
-	color: black;
+	color: white;
 }
 
 #welcome{
 
     margin: 0;
-    padding-top: 1em;
+    padding-top: 0.25em;
     padding-right: 1em;
     padding-bottom: 0.25em;
 
     letter-spacing: 1px;
 
-    color: white;
-    background: rgba(0, 0, 0, 0.75);
+    color: #232323;
+    background: #fafafa;
+    border-bottom: 4px solid #4286f4;
 
-    font-size: 1.75em;
-    border-bottom: 2px solid white;
+    font-size: 2em;
+}
+
+#app-name {
+    font-size: 2em;
+    font-family: Montserrat;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+
+    margin-left: 1em;
+}
+
+#selector .row .col-md-4 .row {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: 0 0 0;
+}
+
+#selector select {
+    background: transparent;
+    max-width: 250px;
+    height: 3em;
+    font-size: 1.25em;
+    margin: auto;
 }
 
 #create-btn {
@@ -78,3 +138,17 @@ html, body {
 #create-btn:hover {
     color: #333;
 }
+
+#hackathon-dreams {
+    padding: 0;
+    margin: 0;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 2em;
+}
+
+#numTracks {
+    text-align: center;
+}
+
