@@ -40,6 +40,10 @@ app.use(bodyParser.urlencoded({
 
 // Basic pages
 app.get('/', function(req, res){
+    return res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/login', function(req, res) {
     var scopes = [
         'playlist-read-private',
         'playlist-read-collaborative',
@@ -48,11 +52,9 @@ app.get('/', function(req, res){
     ];
 
     var state = "I'm not sure what to put here";
-    res.redirect(spotify.createAuthorizeURL(scopes, state));
-});
 
-app.get('/landing', function(req, res) {
-    return res.sendFile(__dirname + '/index.html');
+    spotify.setRedirectURI(req.query.redirect);
+    res.redirect(spotify.createAuthorizeURL(scopes, state));
 });
 
 app.get('/authorize', function(req, res) {
@@ -62,6 +64,10 @@ app.get('/authorize', function(req, res) {
 
         res.redirect('/playlists');
     });
+});
+
+app.get('/create', function(req, res) {
+
 });
 
 app.get('/playlists', function(req, res) {
