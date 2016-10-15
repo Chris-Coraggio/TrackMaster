@@ -60,6 +60,10 @@ MongoClient.connect(dbUrl, function(err, db) {
         res.redirect(spotify.createAuthorizeURL(scopes, state));
     });
 
+    app.get('/landing', function(req, res) {
+        return res.sendFile(__dirname + '/index.html');
+    });
+
     app.get('/authorize', function(req, res) {
         spotify.authorizationCodeGrant(req.query.code).then(function(data) {
             spotify.setAccessToken(data.body.access_token);

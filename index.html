@@ -2,16 +2,41 @@
 <html>
 	<head>
 		<title>TrackMaster</title>
-		<link rel="stylesheet" type="text/css" href="css/style.css">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Our theme -->
+        <link href="https://fonts.googleapis.com/css?family=Lato|Montserrat" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="/css/style.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src = "https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 	</head>
 
+    <body>
+        <div id="content" class="container">
+            <div id="welcome">
+                Welcome NAME!
+            </div>
 
+            <div id="banner">
+                <div id="banner-inner">
+                    <h1>TRACKMASTER</h1>
+                    <p id="caption">The yeeziest playlist maker and manager around</p>
+                </div>
 
-	<!--Add any html before script srcs-->
-
-
-	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-	<script src = "https://code.jquery.com/jquery-2.2.4.min.js"></script>
-	<script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-	<script src = "js/servercomm.js"></script>
+                <a id="create-btn" class="btn" href="/create">Create Your Playlist</a>
+            </div>
+        </div>
+        
+        <!-- Code starts here -->
+        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script src = "js/servercomm.js"></script>
+    </body>
 </html>

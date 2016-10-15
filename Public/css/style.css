@@ -1,0 +1,94 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+
+    font-family: Lato;
+}
+
+#content {
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    background-image: url("/img/bg.jpg");
+    background-size: cover;
+    background-position: center;
+
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#welcome {
+    text-align: right;
+
+    margin: 0;
+    padding-top: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.25em;
+
+    letter-spacing: 1px;
+
+    color: white;
+    background: rgba(0, 0, 0, 0.75);
+
+    font-size: 1.75em;
+    border-bottom: 2px solid white;
+}
+
+#banner {
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: column nowrap;
+
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+
+    font-family: Montserrat;
+    letter-spacing: 3px;
+
+    color: white;
+}
+
+#banner h1 {
+    font-size: 6.5em;
+    font-weight: bold;
+    letter-spacing: 6px;
+}
+
+#banner #caption {
+    font-size: 1.75em;
+}
+
+#banner-inner {
+    background: rgba(0, 0, 0, 0.75);
+    padding: 1em 10em;
+}
+
+#create-btn {
+    margin-top: 1.5em;
+
+    color: white;
+    background: rgb(49, 183, 80);
+    border: 2px solid rgb(66, 244, 107);
+
+    padding: 0.5em;
+    font-size: 2em;
+    font-weight: bold;
+
+    text-transform: uppercase;
+    letter-spacing: 3px;
+
+}
+
+#create-btn:hover {
+    color: #333;
+}
