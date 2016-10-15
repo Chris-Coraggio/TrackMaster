@@ -34,7 +34,7 @@ function createURL(lyrics,page){
 	var lyricKey = lyrics.replace(/ /g, '%');
 	return url +  "&q_lyrics=" + lyricKey + "&page="+page;
 }
-startQuery("This is my fight song");
+//startQuery("This is my fight song");//test statement
 function startQuery(lyrics){
 	var page = 1;
 	while(page <= 3){

@@ -1,0 +1,6 @@
+var songs = sutffFromJoey();
+
+for (var song of songs) {
+    console.log(song.name);
+    console.log(song["name"]);
+}
