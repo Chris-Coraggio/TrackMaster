@@ -92,15 +92,3 @@ html, body {
 #create-btn:hover {
     color: #333;
 }
-
-/*------------------------
-**------CREATE PAGE-------
-**----------------------*/
-
-#banner:h1{
-    align-content: left;
-}
-
-#banner:p{
-    align-content: left;
-}

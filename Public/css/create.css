@@ -1,0 +1,80 @@
+/*------------------------
+**------CREATE PAGE-------
+**----------------------*/
+
+
+html, body {
+    font-family: Lato;
+}
+
+#content{
+	background: #3d3d5c;
+	background-image: none !important;
+	color: white;
+}
+
+.header{
+	text-align: center;
+	text-decoration: underline;
+}
+
+.col-md-4 > p:first-child{
+	font-weight: bold;
+	font-size: 20pt;
+}
+
+.row{
+	/*margin-top: 1.9vh;
+	margin-bottom: 1.9vh;*/
+}
+
+.col-md-4 > .row {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+#minutes_song, #seconds_song{
+	width: 30px;
+	text-align: center;
+}
+
+#lyrics, #instr-dropdown, #key-dropdown{
+	width: 100%;
+	color: black;
+}
+
+#welcome{
+
+    margin: 0;
+    padding-top: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.25em;
+
+    letter-spacing: 1px;
+
+    color: white;
+    background: rgba(0, 0, 0, 0.75);
+
+    font-size: 1.75em;
+    border-bottom: 2px solid white;
+}
+
+#create-btn {
+    margin-top: 1.5em;
+
+    color: white;
+    background: rgb(49, 183, 80);
+    border: 2px solid rgb(66, 244, 107);
+
+    padding: 0.5em;
+    font-size: 2em;
+    font-weight: bold;
+
+    text-transform: uppercase;
+    letter-spacing: 3px;
+
+}
+
+#create-btn:hover {
+    color: #333;
+}

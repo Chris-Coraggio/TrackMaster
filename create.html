@@ -2,7 +2,7 @@
 	<head>
 		<title>TrackMaster</title>
 
-		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/create.css">
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -11,7 +11,6 @@
 
 		<!-- Our theme -->
 		<link href="https://fonts.googleapis.com/css?family=Lato|Montserrat" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="/css/style.css">
 
 		<!-- Latest compiled and minified JavaScript -->
 		<script src = "https://code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -20,13 +19,14 @@
 
 	<body>
 
-		<div id="content">
-
-			<div id="banner">
-				<h1>Trackmaster</h1>
-				<p id="welcome">
-	                Welcome NAME!
-	            </p>
+		<div id="content" class="container">
+			<div class="row tophead" id="welcome">
+				<div class="col-md-8">
+					<h1>Trackmaster</h1>
+				</div>
+				<div class="col-md-4">
+					<p>Welcome NAME!</p>
+	            </div>
 			</div>
 
 			<div id="selector" class="container">
@@ -51,7 +51,7 @@
 						<input id="lyrics" type="text">
 					</div>
 					<div class="col-md-4">
-						<input type="range" min="0.5" max="2.0">
+						<input type="range" min="5" max="20">
 					</div>
 				</div>
 
@@ -63,7 +63,7 @@
 						<select id="instr-dropdown"></select>
 					</div>
 					<div class="col-md-4">
-						<input type="range" min="0.5" max="2.0">
+						<input type="range" min="5" max="20">
 					</div>
 				</div>
 
@@ -72,12 +72,14 @@
 						<p>Tempo:</p>
 					</div>
 					<div class="col-md-4">
-						<label>Turtle Slow</label>
-						<input type="range" min="60" max="200">
-						<label>Rabbit on Coffee Fast</label>
+						<div class="row">
+							<div class="col-md-2"><label>Slow</label></div>
+							<div class="col-md-8"><input type="range" min="60" max="200"></div>
+							<div class="col-md-2"><label>Fast</label></div>
+						</div>
 					</div>
 					<div class="col-md-4">
-						<input type="range" min="0.5" max="2.0">
+						<input type="range" min="5" max="20">
 					</div>
 				</div>
 
@@ -86,12 +88,14 @@
 						<p>Song Length:</p>
 					</div>
 					<div class="col-md-4">
-						<input id="minutes_song" type="text">
-						<label>:</label>
-						<input id="seconds_song" type="text">
+						<center>
+							<input id="minutes_song" type="text">
+							<label> : </label>
+							<input id="seconds_song" type="text">
+						</center>
 					</div>
 					<div class="col-md-4">
-						<input type="range" min="0.5" max="2.0">
+						<input type="range" min="5" max="20">
 					</div>
 				</div>
 
@@ -109,7 +113,7 @@
 						</script>
 					</div>
 					<div class="col-md-4">
-						<input type="range" min="0.5" max="2.0">
+						<input type="range" min="5" max="20">
 					</div>
 				</div>
 
@@ -118,20 +122,22 @@
 						<p>Wanna dance?</p>
 					</div>
 					<div class="col-md-4">
-						<label>I Don't Dance</label>
-						<input type="range" min="0.0" max="1.0">
-						<label>Let's go!</label>
+						<div class="row">
+							<div class="col-md-2"><label>Nah</label></div>
+							<div class="col-md-8"><input type="range" min="0" max="10"></div>
+							<div class="col-md-2"><label>Yeah!</label></div>
+						</div>
 					</div>
 					<div class="col-md-4">
-						<input type="range" min="0.5" max="2.0">
+						<input type="range" min="5" max="20">
 					</div>
 				</div>
 
-				<div id="row">
-					<p>How long is your dream playlist?</p>
-					<input id="minutestotal" type="text">
-					<label>:</label>
-					<input id="secondstotal" type="text">
+				<div class="row">
+					<center>
+						<p>How many songs are in your dream playlist?</p>
+						<input type="text" id="numtracks">
+					</center>
 				</div>
 
 			</div>
