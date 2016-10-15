@@ -1,2 +1,2 @@
 # HelloWorld
-A dope music playlist maker
+A lit music playlist maker
