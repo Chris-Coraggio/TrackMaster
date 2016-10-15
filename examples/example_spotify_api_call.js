@@ -1,5 +1,13 @@
 const api_token = "BQBn0cSSVcNaMGekA-7mdEqfNwFnYgdnVJfX8Pgk_BNIeiRa43g0UN2sgkK8seqDUGpieopYpi90Wp2Tyq5i3luYOgJVK1zWnvwkInEBKrHKgKZyiYVipI3Ccln3kVeoJydHkYSZG643QcTWsyNerenZqsoVC2LmOtUhyXvS0AUKb5_qWlBBxzaCdi74mC0raZ35x9nke2TYyP6x5UoR5Psp4lAUD7S90AujAXf09DBenS0-qrFXz-rq2Jem";
 
+/*
+Client ID
+a385221958aa41d28ece2005e33a9b20
+
+Sendto URL:
+http://trackmaster.me/playlists
+*/
+
 function getAudioFeatures(song_id){
 	//returns an object with danceability, key, length, tempo
 	return makeAudioFeaturesRequest(song_id)
