@@ -3,15 +3,25 @@ var app = require('express')();
 var http =require('http').Server(app);
 var io = require('socket.io')(http);
 
-io.on('connection',function(client){
-	console.log("user connected");
-});
+var MongoClient = require('mongodb').MongoClient;
+var dbUrl = 'mongodb://localhost:27017/TrackMaster';
 
-app.get('/', function(req,res){
-	res.sendFile(__dirname + '/index.html');
-});
-app.use(express.static('Public'));
+MongoClient.connect(dbUrl, function(err, db) {
+    if (err) {
+        console.log("Unable to connect to DB: ", err);
+        return;
+    }
 
-http.listen(process.env.PORT || 81, function(){
-	console.log("Listening on *:81");
+    io.on('connection',function(client){
+        console.log("user connected");
+    });
+
+    app.get('/', function(req,res){
+        res.sendFile(__dirname + '/index.html');
+    });
+    app.use(express.static('Public'));
+
+    http.listen(process.env.PORT || 81, function(){
+        console.log("Listening on *:81");
+    });
 });
