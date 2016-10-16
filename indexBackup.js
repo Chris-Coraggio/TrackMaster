@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var app = require('express')();
 var scraper = require('google-search-scraper');
 var request = require('request');
+var reqPromise = require('request-promise');
 
 var http =require('http').Server(app);
 var io = require('socket.io')(http);
@@ -37,22 +38,21 @@ function createURL(lyrics,page){
 startQuery("This is my fight song");//test statement
 function startQuery(lyrics){
 	var page = 1;
-	while(page <= 5){
-		console.log("iterating");
-	    if(makeRequest(createURL(lyrics,page),page,convertJToC)==400){
-			console.log("out of stuff");
-		}
-		page++;
-	}
-	while(page <= 10){
-		var newLyricOne = lyrics.substring(0,lyrics.indexOf(" "));
-		var trimmed = lyrics.substring(lyrics.indexOf(" ")+1);
-		var newLyricTwo = trimmed.substring(0,trimmed.indexOf(" "));
-		var newLyrics = newLyricOne + " " + newLyricTwo;
-		//console.log(newLyrics);
-	    makeRequest(createURL(newLyrics, page),page,convertJToC);
-		page++;
-	}
+    var newLyricOne = lyrics.substring(0,lyrics.indexOf(" "));
+    var trimmed = lyrics.substring(lyrics.indexOf(" ")+1);
+    var newLyricTwo = trimmed.substring(0,trimmed.indexOf(" "));
+    var newLyrics = newLyricOne + " " + newLyricTwo;
+    var acLyr = lyrics;
+    while(page <= 10){
+      console.log("doing dicks in startQuery");
+      if (page>5)
+        acLyr = newLyrics;
+    makeRequest(createURL(acLyr,page),page,function(list){
+        console.log(list); //THIS IS WHERE IT PRINTS IN THE RIGHT PLACE
+    })
+
+    page++;
+}
 }
 function makeRequest(urlCall,counter,callback){
 	var returnData;
@@ -61,7 +61,6 @@ function makeRequest(urlCall,counter,callback){
 	request({
 		url: urlCall,
 		json: true,
-        async: false
 	}, function(error,response,body){
 		code=response.statusCode;
 		if(!error&&code === 200){
@@ -78,20 +77,26 @@ function makeRequest(urlCall,counter,callback){
 				songList.push(returnData.message.body.track_list[i].track);
 			}
 		}
-	    callback(songList, counter);
-	});
+       if(counter == 10){
+        convertJToC(songList,counter,function(list){
+            callback(list);
+        });
+    }
+    else
+        convertJToC(songList,counter,function(list){});	
+});
 }
 
 function trimName(song){
 	var remove = song;
 	if(remove.includes('('))
 		remove = remove.substring(0,remove.indexOf("("));
-	if(remove.includes('['))
-		remove = remove.substring(0,remove.indexOf("["));
-	if(remove.charAt(remove.length-1) == ' ')
-		remove = remove.substring(0,remove.length-1);
-	return remove;
-}
+           if(remove.includes('['))
+              remove = remove.substring(0,remove.indexOf("["));
+          if(remove.charAt(remove.length-1) == ' ')
+              remove = remove.substring(0,remove.length-1);
+          return remove;
+      }
 
 // Calvin's stuff
 var realLimit = 1;
@@ -103,19 +108,18 @@ var options = {
     query: 'Instruments used in heathens by the 21 pilots wikipedia',
     limit: 1
 };
-var songList = [];
-function convertJToC(songs, counter){
+var finalSongList = [];
+function convertJToC(songs,counter,callback){
     var song = {
         title: "Heathens",
         author: "21 Pilots",
         score: 0,
         previewLink: ""
     };
-
     for(var i=0;i<songs.length;i++){
         var songToAdd = Object.create(song);
         var songName = songs[i].track_name;
-
+        console.log("Converting dicks");
         if(songName.includes(' (')){
             songName = songName.substring(0,songName.indexOf(' ('));
         }else if(songName.includes('(')){
@@ -123,81 +127,123 @@ function convertJToC(songs, counter){
         }
         songToAdd.title = songName;
         songToAdd.author = songs[i].artist_name;
-        songList.push(songToAdd);
-	
-	
-        
+        finalSongList.push(songToAdd);
     }
-    if(counter == 10)
-	loadInstruments(songList, 1, checkSongs);
-    
+    if(counter == 10){
+        console.log("doing the callback shit in convert");
+        callback(finalSongList);
+        return;
+    }
 }
-function loadInstruments(songList, songMultiplier, callback){
-     fs.readFile('instruments.txt','utf8', function(err, data){
-	if(err){
-	    return console.log(err)
-	}
-	instrumentList = data.split('\n');
-	 callback(songList, songMultiplier);
-     });
-    
+function loadInstruments(callback){
+   fs.readFile('instruments.txt','utf8', function(err, data){
+       if(err){
+           return console.log(err)
+       }
+       instrumentList = data.split('\n');
+       callback();
+   });
+
 }
-function change(song){
-    song.score+=.5;
-    
-}
+
 function checkSongs(songList, songMultiplier){
-    console.log(songList.length);
-    var count = 0;
-    for(song of songList) {
+    for(var song of songList) {
         var search = {
-            query: 'Instruments used in ' + song.title + ' by ' + song.author + " wikipedia",
-            limit: 1,
-	    host: 'www.wikipedia.org'
+            query: 'Instruments used in ' + song.title + ' by ' + song.author,
+            limit: 1
         };
-	setInterval(function(){console.log("Scraped Finished")}, 12000);
-	song.score += .5;//Set initial song bonus
-	//try{
-	var tempName = song.author.replace(/ /g,'_');
-	//console.log(song);
-	var url = "https://en.wikipedia.org/wiki/" + song.author.replace(/ /g,'_');
-	myfunc = function(mysong){
-	    return function(error, response, body){
-		var locurl = url;
-		//console.log("URL Currently being scraped: " +"https://en.wikipedia.org/wiki/" + mysong.author.replace(/ /g,'_') );
-		//console.log(mysong.title);
-		var instrCount = 0;
-		if(body.indexOf("Edit section: Personnel") === -1){
-		    mysong.score += .5
-		    return;
-		}
-		instrumentTxt = body.slice(body.indexOf("Edit section: Personnel"));
-		for(var i in instrumentList){
-                    //console.log(instrumentList[i]);
-                    if(instrumentTxt.includes(instrumentList[i])){
-			instrCount ++;
+        scraper.search(options, function(err, url){
+            if(realLimit > currentScrapes){
+                if(err) throw err;
+                
+                request(url, function(error, response, body){
+                    var instrCount = 0;
+                    instrumentTxt = body.slice(body.indexOf("Edit section: Personnel"));
+                    for(var i in instrumentList){
+                        if(instrumentTxt.includes(instrumentList[i])){
+                            instrCount ++;
+                        }
                     }
-		}
 
-		mysong.score += instrCount * songMultiplier;
-		count++;
-		console.log(count);
-		if(count==songList.length-1)
-		    console.log("Yolo dicks");
-		//console.log(songList);
-            }};
-        //request(url, myfunc(song));
-/*	}catch(e){
-	    currentScrapes ++;
-	    song.score += .5;
-	}*/
-
+                    song.score += instrCount * songMultiplier;
+                });
+                
+            }
+            currentScrapes ++;
+            
+        });
     }
-    console.log("Songs parsed");
+}
+
+function getAudioFeatures(token, song_id){
+    //returns an object with danceability, key, length, tempo
+    return makeAudioFeaturesRequest(token, song_id)
+    .then(function(response){
+        response = JSON.parse(response);
+
+        var objectToReturn = {
+            "danceability": response["danceability"],
+            "key": mapNumToKey(response["key"]),
+            "length": convertMillisToSeconds(response["duration_ms"]),
+            "tempo": Math.floor(response["tempo"])
+        }
+        return objectToReturn;
+    });
+}
+
+function getSpotifyFeatures(token, song_name){
+    //returns the name, ID, and preview link
+    return spotify.searchTracks(song_name)
+    .then(function(data){
+        var response = data.body;
+        var objectToReturn = {
+            "name": response.tracks.items[0]["name"],
+            "id": response.tracks.items[0]["id"],
+            "preview_url": response.tracks.items[0]["preview_url"]
+        }
+        return objectToReturn;
+    });
+}
+
+function test(token, song){
+    getSpotifyFeatures(token, song.title).then(function(props){
+        getAudioFeatures(token, props["id"]).then(function(properties){
+            song.preview_url = props["preview_url"];
+            song.score += computeSpotifyScore(properties);
+        })
+    })
+}
+
+function computeSpotifyScore(spotify_props){
+    return(
+      (1 - Math.abs(spotify_props.danceability))
+        + (.25                           )//key
+        + (1 - .1 * Math.floor(Math.abs(spotify_props["tempo"])))
+        + (1 - .1 * Math.floor(Math.abs(spotify_props["length"])))
+
+        );
+}
+
+function makeAudioFeaturesRequest(token, spotify_song_id){
+    return reqPromise.get({ url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + token });
+}
+
+function convertMillisToSeconds(millis){
+
+  var minutes = Math.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  return minutes * 60 + seconds;
+}
+
+function mapNumToKey(key_number){
+    const values = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+    return values[key_number];
 }
 
 io.on('connection',function(client){
     console.log("user connected");
+    client.on('songinfo', function(info){
+    })
 });
 
 // Set up session
@@ -220,15 +266,16 @@ app.get('/', function(req, res){
 
 app.get('/login', function(req, res) {
     var scopes = [
-        'playlist-read-private',
-        'playlist-read-collaborative',
-        'playlist-modify-public',
-        'playlist-modify-private',
+    'playlist-read-private',
+    'playlist-read-collaborative',
+    'playlist-modify-public',
+    'playlist-modify-private',
     ];
 
     var state = "I'm not sure what to put here";
 
-    spotify.setRedirectURI(req.query.redirect);
+    //spotify.setRedirectURI('http://trackmaster.me/authorize');
+    spotify.setRedirectURI('http://localhost:81/authorize');
     res.redirect(spotify.createAuthorizeURL(scopes, state));
 });
 
@@ -237,18 +284,18 @@ app.get('/authorize', function(req, res) {
         spotify.setAccessToken(data.body.access_token);
         spotify.setRefreshToken(data.body.refresh_token);
 
-        res.redirect('/playlists');
+        console.log(data.body);
+        req.session.spotifyToken = data.body.access_token;
+
+        res.redirect('/create');
     });
 });
 
 app.get('/create', function(req, res) {
+    var token = req.session.spotifyToken;
+    console.log(token);
+    test(token);
     return res.sendFile(__dirname + '/create.html');
-});
-
-app.get('/playlists', function(req, res) {
-    spotify.getMe().then(function(data) {
-        console.log(data);
-    });
 });
 
 app.use(express.static('Public'));
