@@ -121,6 +121,10 @@ label {
     margin: auto;
 }
 
+#selector select option {
+    color: black;
+}
+
 #create-btn {
     margin-top: 1.5em;
 
