@@ -201,12 +201,23 @@ function getSpotifyFeatures(token, song_name){
     });
 }
 
-function test(token){
-    getSpotifyFeatures(token, "Footloose").then(function(props){
+function test(token, song){
+    getSpotifyFeatures(token, song.title).then(function(props){
         getAudioFeatures(token, props["id"]).then(function(properties){
-            console.log(properties);
+            song.preview_url = props["preview_url"];
+            song.score += computeSpotifyScore(properties);
         })
     })
+}
+
+function computeSpotifyScore(spotify_props){
+    return(
+          (1 - Math.abs(spotify_props.danceability))
+        + (.25                           )//key
+        + (1 - .1 * Math.floor(Math.abs(spotify_props["tempo"])))
+        + (1 - .1 * Math.floor(Math.abs(spotify_props["length"])))
+
+        );
 }
 
 function makeAudioFeaturesRequest(token, spotify_song_id){
@@ -217,7 +228,7 @@ function convertMillisToSeconds(millis){
 
   var minutes = Math.floor(millis / 60000);
   var seconds = ((millis % 60000) / 1000).toFixed(0);
-  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+  return minutes * 60 + seconds;
 }
 
 function mapNumToKey(key_number){
@@ -227,6 +238,8 @@ function mapNumToKey(key_number){
 
 io.on('connection',function(client){
     console.log("user connected");
+    client.on('songinfo', function(info){
+    })
 });
 
 // Set up session
@@ -270,18 +283,15 @@ app.get('/authorize', function(req, res) {
         console.log(data.body);
         req.session.spotifyToken = data.body.access_token;
 
-        res.redirect('/playlists');
+        res.redirect('/create');
     });
 });
 
 app.get('/create', function(req, res) {
-    return res.sendFile(__dirname + '/create.html');
-});
-
-app.get('/playlists', function(req, res) {
     var token = req.session.spotifyToken;
     console.log(token);
     test(token);
+    return res.sendFile(__dirname + '/create.html');
 });
 
 app.use(express.static('Public'));
