@@ -208,6 +208,9 @@ function runSpotifyStuff(token, song, info){
         getAudioFeatures(token, props["id"]).then(function(properties){
             song.preview_url = props["preview_url"];
             song.score += computeSpotifyScore(properties);
+            //add in instrument component
+            if(song.hasInstrument) song.score += (.75 * info.ins);
+            else song.score += (.25 * info.ins);
         });
     });
 }
