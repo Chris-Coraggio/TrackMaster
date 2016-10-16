@@ -215,14 +215,14 @@ function test(){
 
 function makeAudioFeaturesRequest(spotify_song_id){
 
-    return $.get({
+    return request.get({
             url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + spotify.getAccessToken()
             });
 }
 
 function makeIDRequest(song_name){
 
-    return $.get({
+    return request.get({
             url: "https://api.spotify.com/v1/search/?q=" + song_name + "&type=track"
             });
 }
