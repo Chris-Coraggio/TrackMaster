@@ -152,3 +152,42 @@ label {
     text-align: center;
 }
 
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 36px;
+  width: 16px;
+  border-radius: 30px;
+  background: white;
+  cursor: pointer;
+  margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid white;
+  border-radius: 1.3px;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 0px;
+  margin-top: 22px;
+  padding: 0px;
+  border: 0 none;
+  background: transparent;
+  color: transparent;
+  overflow: visible;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+  border: none;
+}
+
+.col-md-2 label {
+    font-size: 2em;
+}
