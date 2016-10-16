@@ -60,13 +60,7 @@
                         <div class="col-md-4">
                             <center>
                                 <select class="form-control" id="instr-dropdown"></select>
-                               </center>
-                                <script>
-                                var instrumentsList = ["Acoustic Guitar", "Electric Guitar", "Ukelele", "Piano", "Drum", "Saxophone", "Trumpet", "Trombone", "Tuba", "Mandolin", "Vocals", "Violin", "Bass", "String Bass", "Keyboard", "Cello", "Clarinet", "Flute", "Bassoon", "Oboe", "French Horn", "Baritone", "Tambourine", "Snare Drum"];
-                                instrumentsList.forEach(function(instr){
-                                $("#instr-dropdown").append("<option>" + instr + "</option>");
-                            	});
-                                </script>
+                            </center>
                         </div>
                         <div class="col-md-4">
                             <input class="form-control" type="range" min="5" max="20" id="instAffin">
@@ -149,7 +143,30 @@
                     </div>
                     <button id="create-btn">Make My Playlist!</button>
 
-                    <div id="playlist-results"></div>
+                    <div id="playlist-results">
+                        <div class="playlist-row">
+                            <p class="row-number">1.</p>
+                            <p class="song-title">The Boys are Back in Town</p>
+                            <p class="song-author">Beach Boys</p>
+
+                            <div class="player">
+                                <audio>
+                                    <source src="http://www.terrillthompson.com/music/audio/smallf.mxx">
+                                </audio>
+                            </div>
+                        </div>
+
+                        <div class="playlist-row">
+                            <p class="row-number">2.</p>
+                            <p class="song-title">Strawberry Fields</p>
+                            <p class="song-author">Marie Caly</p>
+                            <div class="player">
+                                <audio>
+                                    <source src="http://www.terrillthompson.com/music/audio/smallf.mxx">
+                                </audio>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -157,6 +174,7 @@
 		<!-- Code starts here -->
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-		<script src = "js/servercomm.js"></script>
+        <script src = "js/servercomm.js"></script>
+        <script src="js/player.js"></script>
 	</body>
 </html>
