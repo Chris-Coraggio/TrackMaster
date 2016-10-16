@@ -6,7 +6,7 @@ $(document).ready(function(){
         console.log(" iam not a hauaman");
 		dataObj.lyrics = $("#lyrics").val();
 		dataObj.instruments = $("#instr-dropdown").val();
-		var sonLen = parseInt($("#tempo").val());
+		dataObj.tempo = parseInt($("#tempo").val());
 		dataObj.songLength =(parseInt($("#minutes_song").val())*60)+parseInt($("#seconds_song").val());
 		dataObj.key = $("#key-dropdown").val();
 		dataObj.dance = parseInt($("#danceAmout").val());

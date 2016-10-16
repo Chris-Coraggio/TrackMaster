@@ -203,7 +203,7 @@ function getSpotifyFeatures(token, song_name){
         return objectToReturn;
     });
 }
-function test(token, song){
+function runSpotifyStuff(token, song, info){
     getSpotifyFeatures(token, song.title).then(function(props){
         getAudioFeatures(token, props["id"]).then(function(properties){
             song.preview_url = props["preview_url"];
@@ -211,11 +211,13 @@ function test(token, song){
         });
     });
 }
-function computeSpotifyScore(spotify_props){
-    var dance = (1 - Math.abs(spotify_props.danceability));
-    var key = 0.25;//You had key in comments here chris, idk why
-    var tempo = (1 - .1 * Math.floor(Math.abs(spotify_props["tempo"])));
-    var length = (1 - .1 * Math.floor(Math.abs(spotify_props["length"])));
+function computeSpotifyScore(spotify_props, info){
+    var dance = (1 - Math.abs(spotify_props.danceability - info.dance)) * (lyr / 10);
+    var key = 0.25 * (kyA / 10);
+    var tempo = (1 - .1 * Math.floor(Math.abs(spotify_props["tempo"] - info.tempo) / 5)) * (tem / 10);
+    if(tempo < 0) tempo = 0;
+    var length = (1 - .1 * Math.floor(Math.abs(spotify_props["length"] - info.songLength) / 10)) * (len / 10);
+    if(length < 0) length = 0;
     return (dance+key+tempo+length);
 // (1 - Math.abs(spotify_props.danceability))+ (.25/*key*/)+(1 - .1 * Math.floor(Math.abs(spotify_props["tempo"])))+(1 - .1 * Math.floor(Math.abs(spotify_props["length"])))
 // ); Old formula for safekeeping
@@ -289,7 +291,9 @@ app.get('/create', function(req, res) {
             var token = req.session.spotifyToken;
             //console.log(info);
             setTimeout(function(){
-                console.log(clientList[0].songList);//Used index 0 because I didn't want to write another for loop but it works for now
+                console.log(info);
+                //console.log(clientList[0].songList);//Used index 0 because I didn't want to write another for loop but it works for now
+                runSpotifyStuff(token, clientList[0].songList, info);
             },4000)
             /*THIS ALL WORKS I WILL EXPLAIN IN THE MORNING*/
 
