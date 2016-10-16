@@ -150,7 +150,6 @@
                             <p class="song-author">Beach Boys</p>
 
                             <div class="player">
-                                <img src="http://allwarriornetwork.com/wp-content/uploads/2015/12/play-button-overlay-sm.png">
                                 <audio>
                                     <source src="http://www.terrillthompson.com/music/audio/smallf.mxx">
                                 </audio>
@@ -161,9 +160,11 @@
                             <p class="row-number">2.</p>
                             <p class="song-title">Strawberry Fields</p>
                             <p class="song-author">Marie Caly</p>
-                            <audio controls>
-                                <source src="http://www.terrillthompson.com/music/audio/smallf.mxx">
-                            </audio>
+                            <div class="player">
+                                <audio>
+                                    <source src="http://www.terrillthompson.com/music/audio/smallf.mxx">
+                                </audio>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -173,6 +174,7 @@
 		<!-- Code starts here -->
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-		<script src = "js/servercomm.js"></script>
+        <script src = "js/servercomm.js"></script>
+        <script src="js/player.js"></script>
 	</body>
 </html>

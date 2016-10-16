@@ -282,3 +282,20 @@ audio::-webkit-media-controls-volume-slider {
     background: url("/img/play.png");
 }
 
+.loading {
+    display: block;
+
+    width: 64px;
+    height: 64px;
+
+    margin: 3em auto;
+
+    background-image: url("/img/loading2.gif");
+    background-size: contain;
+    background-position: center;
+}
+
+.preload {
+    display: none;
+}
+

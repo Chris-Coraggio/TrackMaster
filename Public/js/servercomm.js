@@ -4,6 +4,13 @@ var dataObj = {}
 
 $(document).ready(function(){
 	$("#create-btn").click(function(){
+        if ($(".loading").length == 0) {
+            var loadingGif = $("<div>")
+                .addClass("loading");
+
+            $(this).after(loadingGif);
+        }
+
         console.log(" iam not a hauaman");
 		dataObj.lyrics = $("#lyrics").val();
 		dataObj.instruments = $("#instr-dropdown").val();
@@ -27,6 +34,8 @@ $(document).ready(function(){
 	});
 
     server.on('playlist', function(songs) {
+        $(".loading").remove();
+
         var index = 1;
         for (var song of songs) {
             var track = $("<div>".addClass(".playlist-row"));
