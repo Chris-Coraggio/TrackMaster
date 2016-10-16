@@ -178,6 +178,69 @@ function checkSongs(songList, songMultiplier){
     }
 }
 
+function getAudioFeatures(song_id){
+    //returns an object with danceability, key, length, tempo
+    return makeAudioFeaturesRequest(song_id)
+        .then(function(response){
+            var objectToReturn = {
+                "danceability": response["danceability"],
+                "key": mapNumToKey(response["key"]),
+                "length": convertMillisToSeconds(response["duration_ms"]),
+                "tempo": Math.floor(response["tempo"])
+            }
+            return objectToReturn;
+        });
+}
+
+function getSpotifyFeatures(song_name){
+    //returns the name, ID, and preview link
+    return makeIDRequest(song_name)
+    .then(function(response){
+        var objectToReturn = {
+            "name": response.tracks.items[0]["name"],
+            "id": response.tracks.items[0]["id"],
+            "preview_url": response.tracks.items[0]["preview_url"]
+        }
+        return objectToReturn;
+    });
+}
+
+function test(){
+    getSpotifyFeatures("Footloose").then(function(props){
+        getAudioFeatures(props["id"]).then(function(properties){
+            console.log(properties);
+        })
+    })
+}
+
+function makeAudioFeaturesRequest(spotify_song_id){
+
+    return $.get({
+            url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + spotify.getAccessToken()
+            });
+}
+
+function makeIDRequest(song_name){
+
+    return $.get({
+            url: "https://api.spotify.com/v1/search/?q=" + song_name + "&type=track"
+            });
+}
+
+function convertMillisToSeconds(millis){
+
+  var minutes = Math.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+}
+
+function mapNumToKey(key_number){
+    const values = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+    return values[key_number];
+}
+
+test();
+
 io.on('connection',function(client){
     console.log("user connected");
 });
