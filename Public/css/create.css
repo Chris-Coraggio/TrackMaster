@@ -205,6 +205,63 @@ input[type=range]:focus {
 
 #playlist-results {
     background: transparent;
-    margin-top: 2em;
+    margin: 2em 12em;
 }
+
+.playlist-row {
+    border: 2px solid white;
+    border-radius: 3px;
+
+    margin-top: 1em;
+
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.playlist-row > * {
+    margin: 0.5em 1em;
+}
+
+.playlist-row p {
+    font-size: 1.75em;
+}
+
+.row-number {
+    font-family: Montserrat;
+    font-size: 3em !important;
+    font-style: italic;
+}
+
+.song-title {
+    margin-left: 5em;
+    width: 35%;
+}
+
+.song-author {
+    flex-grow: 1;
+}
+
+audio {
+    width:260px;
+    overflow: hidden;
+    direction: ltl;
+    border-top-right-radius: 0.5em 0.5em;
+    border-bottom-right-radius: 1em 0.7em;
+}
+
+audio::-webkit-media-controls-panel {
+    background: transparent;
+}
+
+
+audio::-webkit-media-controls-volume-slider [
+    color: transparent;
+    background: transparent;
+}
+
+.player img {
+    margin: 0;
+}
+
 

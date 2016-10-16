@@ -278,6 +278,7 @@ app.get('/authorize', function(req, res) {
         res.redirect('/create');
     });
 });
+
 app.get('/create', function(req, res) {
     io.on('connection',function(client){
         client.on('songinfo', function(info){

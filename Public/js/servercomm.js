@@ -2,33 +2,18 @@ var server = io();
 //Add socket.io stuff here
 var dataObj = {}
 
-function makePlayers() {
-    $(".player").each(function(ply) {
-        ply = $(ply);
-        var audio = ply.find("audio");
-        var btn = ply.find("img");
-
-        console.log(btn);
-
-        btn.click(function() {
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.pause();
-            }
-        });
-    });
-}
-
 $(document).ready(function(){
-    makePlayers();
-
 	$("#create-btn").click(function(){
         console.log(" iam not a hauaman");
 		dataObj.lyrics = $("#lyrics").val();
 		dataObj.instruments = $("#instr-dropdown").val();
+
+        var minutes = $("#minutes_song").val() !== "" ? parseInt($("#minutes_song").val()) : 3;
+		dataObj.songLength =(minutes*60)+parseInt($("#seconds_song").val());
+
 		dataObj.tempo = parseInt($("#tempo").val());
 		dataObj.songLength =(parseInt($("#minutes_song").val())*60)+parseInt($("#seconds_song").val());
+
 		dataObj.key = $("#key-dropdown").val();
 		dataObj.dance = parseInt($("#danceAmount").val());
 		//affinities
@@ -41,5 +26,22 @@ $(document).ready(function(){
 
         server.emit('songinfo', dataObj);
 	});
-	
+
+    server.on('playlist', function(songs) {
+        var index = 1;
+        for (var song of songs) {
+            var track = $("<div>".addClass(".playlist-row"));
+
+            track.append($("<p>").text(index));
+
+            track.append($("<p>").text(track.title));
+            track.append($("<p>").text(track.author));
+
+            var previewAudio = $("<audio controls>");
+            previewAudio.append($("<source>").prop("src", previewAudio));
+
+            $("#playlist-results").append(track);
+            index++;
+        }
+    });
 });
