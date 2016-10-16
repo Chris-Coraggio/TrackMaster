@@ -60,7 +60,13 @@
                         <div class="col-md-4">
                             <center>
                                 <select class="form-control" id="instr-dropdown"></select>
-                            </center>
+                               </center>
+                                <script>
+                                var instrumentsList = ["Acoustic Guitar", "Electric Guitar", "Ukelele", "Piano", "Drum", "Saxophone", "Trumpet", "Trombone", "Tuba", "Mandolin", "Vocals", "Violin", "Bass", "String Bass", "Keyboard", "Cello", "Clarinet", "Flute", "Bassoon", "Oboe", "French Horn", "Baritone", "Tambourine", "Snare Drum"];
+                                instrumentsList.forEach(function(instr){
+                                $("#instr-dropdown").append("<option>" + instr + "</option>");
+                            	});
+                                </script>
                         </div>
                         <div class="col-md-4">
                             <input class="form-control" type="range" min="5" max="20" id="instAffin">

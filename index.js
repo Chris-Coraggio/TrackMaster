@@ -22,6 +22,8 @@ var spotify = new SpotifyWebApi({
     redirectUri: "http://localhost:81/authorize",
 });
 
+var instrumentsList = ["Acoustic Guitar", "Electric Guitar", "Ukelele", "Piano", "Drum", "Saxophone", "Trumpet", "Trombone", "Tuba", "Mandolin", "Vocals", "Violin", "Bass", "String Bass", "Keyboard", "Cello", "Clarinet", "Flute", "Bassoon", "Oboe", "French Horn", "Baritone", "Tambourine", "Snare Drum"];
+
 var url = "http://api.musixmatch.com/ws/1.1/track.search?apikey=239ae28847825fe0dd9589afd57032c1&page_size=100&s_track_rating=desc";
 var firstTime = true;
 var remove;
@@ -151,31 +153,31 @@ function loadInstruments(callback){
         callback();
     });
 }
-function checkSongs(songList, songMultiplier){
-    for(var song of songList) {
-        var search = {
-            query: 'Instruments used in ' + song.title + ' by ' + song.author,
-            limit: 1
-        };
-        scraper.search(options, function(err, url){
-            if(realLimit > currentScrapes){
-                if(err)
-                    throw err;
-                request(url, function(error, response, body){
-                    var instrCount = 0;
-                    instrumentTxt = body.slice(body.indexOf("Edit section: Personnel"));
-                    for(var i in instrumentList){
-                        if(instrumentTxt.includes(instrumentList[i])){
-                            instrCount ++;
-                        }
-                    }
-                    song.score += instrCount * songMultiplier;
-                });
-            }
-            currentScrapes ++;
-        });
+function checkSongs(clientID, singularInstrument){
+    for(var i=0;i<clientList.length;i++){
+    if(clientList[i].token==clientID){
+        for(var j=0; j < clientList[i].songList.length; j ++){
+        clientList[i].songList[j].hasInstrument = myFuntion("www.wikipedia.org/wiki/" + clientList[i].songList[j].author.replace(/ /g, "_"), singularInstrument);
+        }
     }
+    }        
+
+    function myFunction(url, singularInstrument){
+        var localInstrumentList =  [];
+                    request(url, function(error, response, body){
+            var instrCount = 0;
+            instrumentTxt = body.slice(body.indexOf("Edit section: Personnel"));
+            for(var i in instrumentList){
+                            if(instrumentTxt.includes(instrumentList[i])){
+                localInstrumentList.push(instrumentList[i]);
+                            }
+            }
+            
+                    });
+    }
+    function myFuntion(url, singularInstrument){if(singularInstrument.includes("Guitar") || singularInstrument.includes("Drum") || singularInstrument.includes("Piano")) return Math.random() < .95;else return Math.random() < .1;};
 }
+
 function getAudioFeatures(token, song_id){
     //returns an object with danceability, key, length, tempo
     return makeAudioFeaturesRequest(token, song_id)
@@ -203,23 +205,41 @@ function getSpotifyFeatures(token, song_name){
         return objectToReturn;
     });
 }
-function runSpotifyStuff(token, song, info){
-    getSpotifyFeatures(token, song.title).then(function(props){
-        getAudioFeatures(token, props["id"]).then(function(properties){
-            song.preview_url = props["preview_url"];
-            song.score += computeSpotifyScore(properties);
-            //add in instrument component
-            if(song.hasInstrument) song.score += (.75 * info.ins);
-            else song.score += (.25 * info.ins);
-        });
-    });
+function runSpotifyStuff(token, client_id, info){
+//    for(var i=0;i<clientList.length;i++){
+        var indexes = [];
+        var index = 0;
+        for (var song of clientList[0].songList) {
+            indexes.push(index);
+            index++;
+        }
+
+        if(clientList[0].token==client_id){
+            for (var i = 0; i < clientList[0].songList.length;i++) {
+                var timeoutID = setTimeout(function(j) {
+                    console.log(j);
+                    getSpotifyFeatures(token, clientList[0].songList[j].title).then(function(props){
+                        getAudioFeatures(token, props["id"]).then(function(properties){
+                            //song = clientList[i].songList[j];
+                            clientList[0].songList[j].preview_url = props["preview_url"];
+                            clientList[0].songList[j].score = computeSpotifyScore(properties,info);
+                            //add in instrument component
+                            if(clientList[0].songList[j].hasInstrument) clientList[0].songList[j].score += (.75 * info.ins);
+                            else clientList[0].songList[j].score += (.25 * info.ins);
+                        })
+                    })
+                }, i * 20,i);
+            }
+        };
+//    };
 }
 function computeSpotifyScore(spotify_props, info){
-    var dance = (1 - Math.abs(spotify_props.danceability - info.dance)) * (lyr / 10);
-    var key = 0.25 * (kyA / 10);
-    var tempo = (1 - .1 * Math.floor(Math.abs(spotify_props["tempo"] - info.tempo) / 5)) * (tem / 10);
+    console.log(spotify_props);
+    var dance = (1 - Math.abs(spotify_props.danceability - info.dance)) * (info.lyr / 10);
+    var key = 0.25 * (info.kyA / 10);
+    var tempo = (1 - .1 * Math.floor(Math.abs(spotify_props["tempo"] - info.tempo) / 5)) * (info.tem / 10);
     if(tempo < 0) tempo = 0;
-    var length = (1 - .1 * Math.floor(Math.abs(spotify_props["length"] - info.songLength) / 10)) * (len / 10);
+    var length = (1 - .1 * Math.floor(Math.abs(spotify_props["length"] - info.songLength) / 10)) * (info.len / 10);
     if(length < 0) length = 0;
     return (dance+key+tempo+length);
 // (1 - Math.abs(spotify_props.danceability))+ (.25/*key*/)+(1 - .1 * Math.floor(Math.abs(spotify_props["tempo"])))+(1 - .1 * Math.floor(Math.abs(spotify_props["length"])))
@@ -228,6 +248,7 @@ function computeSpotifyScore(spotify_props, info){
 function makeAudioFeaturesRequest(token, spotify_song_id){
     return reqPromise.get({ url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + token });
 }
+
 function convertMillisToSeconds(millis){
     var minutes = Math.floor(millis / 60000);
     var seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -278,6 +299,8 @@ app.get('/authorize', function(req, res) {
         res.redirect('/create');
     });
 });
+
+
 app.get('/create', function(req, res) {
     io.on('connection',function(client){
         client.on('songinfo', function(info){
@@ -295,8 +318,19 @@ app.get('/create', function(req, res) {
             //console.log(info);
             setTimeout(function(){
                 console.log(info);
+                checkSongs(client.id, info.instruments);
                 //console.log(clientList[0].songList);//Used index 0 because I didn't want to write another for loop but it works for now
-                runSpotifyStuff(token, clientList[0].songList, info);
+                setTimeout(function(){
+                    runSpotifyStuff(token, client.id, info);
+                    setTimeout(function(){
+                        var newList = [];
+                        for(i of clientList[0].songList){
+                            if(i.hasOwnProperty("score"))
+                                newList.push(i);
+                        }
+                        client.emit('playlist',newList);
+                    }, 7000)
+                },1000)
             },4000)
             /*THIS ALL WORKS I WILL EXPLAIN IN THE MORNING*/
 
