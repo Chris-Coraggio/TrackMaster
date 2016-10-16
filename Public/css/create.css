@@ -255,13 +255,24 @@ audio::-webkit-media-controls-panel {
 }
 
 
-audio::-webkit-media-controls-volume-slider [
+audio::-webkit-media-controls-volume-slider {
     color: transparent;
     background: transparent;
 }
 
-.player img {
-    margin: 0;
+.player {
+    width: 64px;
+    height: 64px;
+
+    margin-right: 2em;
+    background: url("/img/play.png");
 }
 
+.player.on {
+    background: url("/img/pause.png");
+}
+
+.player.off {
+    background: url("/img/play.png");
+}
 
