@@ -201,11 +201,13 @@ input[type=range]:focus {
 #create-btn {
     display: block;
     margin: auto;
+    margin-top: 2em;
 }
 
 #playlist-results {
     background: transparent;
-    margin: 2em 12em;
+    width: 50%;
+    margin: auto;
 }
 
 .playlist-row {
@@ -217,6 +219,8 @@ input[type=range]:focus {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+
+    margin: 2em;
 }
 
 .playlist-row > * {
@@ -234,12 +238,14 @@ input[type=range]:focus {
 }
 
 .song-title {
-    margin-left: 5em;
+    margin-left: 2em;
     width: 35%;
+    font-family: Montserrat;
 }
 
 .song-author {
     flex-grow: 1;
+    font-style: italic;
 }
 
 audio {
