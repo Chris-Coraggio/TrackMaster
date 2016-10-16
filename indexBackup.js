@@ -128,8 +128,10 @@ function convertJToC(songs, counter){
 	
         
     }
-    if(counter == 10)
-	loadInstruments(songList, 1, checkSongs);
+    if(counter == 10){
+    	console.log("dicks");
+		loadInstruments(songList, 1, checkSongs);
+    }
     
 }
 function loadInstruments(songList, songMultiplier, callback){
