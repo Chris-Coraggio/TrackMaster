@@ -26,13 +26,21 @@ var url = "http://api.musixmatch.com/ws/1.1/track.search?apikey=239ae28847825fe0
 var firstTime = true;
 var remove;
 
+var userClient = {
+    access: 0,
+    songList: []
+}
+var clientList = [];
+
 // Joey's stuff
 function createURL(lyrics,page){
     var lyricKey = lyrics.replace(/ /g, '%');
     return url +  "&q_lyrics=" + lyricKey + "&page="+page;
 }//close CreatURL
-startQuery("This is my fight song");//test statement
-function startQuery(lyrics){
+//console.log(startQuery("This is my fight song"));//test statement
+function startQuery(lyrics,token){
+    var finalList;
+    var done = false;
     var page = 1;
     var newLyricOne = lyrics.substring(0,lyrics.indexOf(" "));
     var trimmed = lyrics.substring(lyrics.indexOf(" ")+1);
@@ -40,16 +48,21 @@ function startQuery(lyrics){
     var newLyrics = newLyricOne + " " + newLyricTwo;
     var acLyr = lyrics;
     while(page <= 10){
-        console.log("doing dicks in startQuery");
         if (page>5)
             acLyr = newLyrics;
-        makeRequest(createURL(acLyr,page),page,function(list){
-            console.log(list); //THIS IS WHERE IT PRINTS IN THE RIGHT PLACE
+        makeRequest(createURL(acLyr,page),page,token,function(list,id){
+            finalList = list; //THIS IS WHERE IT PRINTS IN THE RIGHT PLACE
+            console.log("finished");
+            for(var i=0;i<clientList.length;i++){
+                if(clientList[i].token == id)
+                    clientList[i].songList = finalList.slice(0);
+            }
         });
         page++;
     }
 }//close startQuery
-function makeRequest(urlCall,counter,callback){
+function makeRequest(urlCall,counter,token,callback){
+    console.log("making request " + counter);
     var returnData;
     var songList = [];
     var code=0;
@@ -74,7 +87,7 @@ function makeRequest(urlCall,counter,callback){
         }
         if(counter == 10){
             convertJToC(songList,counter,function(list){
-                callback(list);
+                callback(list,token);
             });
         }else{
             convertJToC(songList,counter,function(list){});
@@ -93,6 +106,7 @@ function trimName(song){
 }//close trimName
 var finalSongList = [];
 function convertJToC(songs,counter,callback){
+    console.log("converting " + counter);
     var song = {
         title: "Heathens",
         author: "21 Pilots",
@@ -102,7 +116,6 @@ function convertJToC(songs,counter,callback){
     for(var i=0;i<songs.length;i++){
         var songToAdd = Object.create(song);
         var songName = songs[i].track_name;
-        console.log("Converting dicks");
         if(songName.includes(' (')){
             songName = songName.substring(0,songName.indexOf(' ('));
         }else if(songName.includes('(')){
@@ -113,7 +126,6 @@ function convertJToC(songs,counter,callback){
         finalSongList.push(songToAdd);
     }
     if(counter == 10){
-        console.log("doing the callback shit in convert");
         callback(finalSongList);
         return;
     }
@@ -264,8 +276,24 @@ app.get('/authorize', function(req, res) {
 app.get('/create', function(req, res) {
     io.on('connection',function(client){
         client.on('songinfo', function(info){
+            startQuery(info.lyrics,client.id);
+            var isThere = false;
+            var clientFolder = Object.create(userClient);
+            clientFolder.token = client.id;
+            for(var i=0;i<clientList.length;i++){
+                if(clientList[i].token == client.id)
+                    isThere = true;
+            }
+            if(!isThere)
+                clientList.push(clientFolder);
             var token = req.session.spotifyToken;
-            console.log(info);
+            //console.log(info);
+            setTimeout(function(){
+                console.log(clientList[0].songList);
+            },4000)
+            /*THIS ALL WORKS I WILL EXPLAIN IN THE MORNING*/
+
+            //Basically I store the client id and use that to store/fetch the songlist instead of having a single global variable
         });
     });
     return res.sendFile(__dirname + '/create.html');
