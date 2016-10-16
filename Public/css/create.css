@@ -40,7 +40,7 @@ html, body {
     margin: 2em 10em;
     padding: 2em 1em;
     background: rgba(0, 0, 0, 0.75);
-    box-shadow: 0 2px 5px #4286f4;
+    box-shadow: 0 1px 15px #4286f4;
 }
 
 input[type="text"] {
@@ -151,7 +151,7 @@ label {
     font-style: italic;
     text-transform: uppercase;
     letter-spacing: 3px;
-    font-size: 2em;
+    font-size: 1.25em;
 }
 
 #numTracks {
