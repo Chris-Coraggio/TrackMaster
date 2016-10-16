@@ -4,16 +4,20 @@
 
 html, body {
     font-family: Lato;
+    color: white;
+    background: black;
 }
 
 #content {
-	background: url("/img/bg2.jpg");
-    background-size: cover;
-    background-position: center;
 	color: white;
+    background: black;
 }
 
 #main-content {
+	background: url("/img/bg2.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: repeat;
     margin-top: 1.5em;
 }
 

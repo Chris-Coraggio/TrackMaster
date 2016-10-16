@@ -35,21 +35,68 @@ $(document).ready(function(){
 
     server.on('playlist', function(songs) {
         $(".loading").remove();
+        $("#playlist-results").empty();
+
+        songs.sort(function(a, b) {
+            if (a.score < b.score) {
+                return -1;
+            } else if (a.score > b.score) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        console.log(songs);
+
+        songs = songs.slice(0, parseInt($("#numtracks").val()));
 
         var index = 1;
         for (var song of songs) {
-            var track = $("<div>".addClass(".playlist-row"));
+            var track = $("<div>").addClass("playlist-row");
 
-            track.append($("<p>").text(index));
+            track.append($("<p>").text(index).addClass("row-number"));
 
-            track.append($("<p>").text(track.title));
-            track.append($("<p>").text(track.author));
+            track.append($("<p>").text(song.title).addClass("song-title"));
+            track.append($("<p>").text(song.author).addClass("song-author"));
 
-            var previewAudio = $("<audio controls>");
-            previewAudio.append($("<source>").prop("src", previewAudio));
+            var player = $("<div>")
+                .addClass("player")
+                .append($("<audio>").append(
+                    $("<source>").prop("src", song.preview_url).prop("type", "audio/mpeg")
+                ));
+
+            track.append(player);
 
             $("#playlist-results").append(track);
             index++;
         }
+
+        $(".player").each(function() {
+            var ply = $(this);
+            ply.addClass("off");
+
+            var audio = ply.children("audio").get(0);
+            var img = ply.children("img");
+
+            console.log(audio);
+            console.log(img);
+
+            ply.click(function() {
+                console.log("HELLO");
+                if (audio.paused) {
+                    audio.play();
+
+                    ply.removeClass("off");
+                    ply.addClass("on");
+                } else {
+                    audio.pause();
+                    audio.currentTime = 0;
+
+                    ply.removeClass("on");
+                    ply.addClass("off");
+                }
+            });
+        });
     });
 });

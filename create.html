@@ -63,7 +63,7 @@
                             </center>
                             <script>
                             	var instrumentsList = ["Acoustic Guitar", "Electric Guitar", "Ukelele", "Piano", "Drum", "Saxophone", "Trumpet", "Trombone", "Tuba", "Mandolin", "Vocals", "Violin", "Bass", "String Bass", "Keyboard", "Cello", "Clarinet", "Flute", "Bassoon", "Oboe", "French Horn", "Baritone", "Tambourine", "Snare Drum"];
-                            	instrumentsList.each(function(instr){
+                            	instrumentsList.forEach(function(instr){
                             		$("#instr-dropdown").append("<option>" + instr + "</option>");
                             	})
 
@@ -148,34 +148,12 @@
                             <input class="form-control" type="text" id="numtracks">
                         </center>
                     </div>
-                    <button id="create-btn">Make My Playlist!</button>
-
-                    <div id="playlist-results">
-                        <div class="playlist-row">
-                            <p class="row-number">1.</p>
-                            <p class="song-title">The Boys are Back in Town</p>
-                            <p class="song-author">Beach Boys</p>
-
-                            <div class="player">
-                                <audio>
-                                    <source src="http://www.terrillthompson.com/music/audio/smallf.mxx">
-                                </audio>
-                            </div>
-                        </div>
-
-                        <div class="playlist-row">
-                            <p class="row-number">2.</p>
-                            <p class="song-title">Strawberry Fields</p>
-                            <p class="song-author">Marie Caly</p>
-                            <div class="player">
-                                <audio>
-                                    <source src="http://www.terrillthompson.com/music/audio/smallf.mxx">
-                                </audio>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
+
+            <button id="create-btn">Make My Playlist!</button>
+
+            <div id="playlist-results"></div>
         </div>
 
 		<!-- Code starts here -->
