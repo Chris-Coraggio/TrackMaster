@@ -191,3 +191,14 @@ input[type=range]:focus {
 .col-md-2 label {
     font-size: 2em;
 }
+
+#create-btn {
+    display: block;
+    margin: auto;
+}
+
+#playlist-results {
+    background: transparent;
+    margin-top: 2em;
+}
+
