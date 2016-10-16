@@ -141,7 +141,6 @@ function loadInstruments(callback){
         callback();
     });
 }
-
 function checkSongs(songList, songMultiplier){
     for(var song of songList) {
         var search = {
@@ -150,43 +149,37 @@ function checkSongs(songList, songMultiplier){
         };
         scraper.search(options, function(err, url){
             if(realLimit > currentScrapes){
-                if(err) throw err;
-                
+                if(err)
+                    throw err;
                 request(url, function(error, response, body){
                     var instrCount = 0;
                     instrumentTxt = body.slice(body.indexOf("Edit section: Personnel"));
                     for(var i in instrumentList){
                         if(instrumentTxt.includes(instrumentList[i])){
-                        instrCount ++;
+                            instrCount ++;
                         }
                     }
-
                     song.score += instrCount * songMultiplier;
                 });
-                
             }
             currentScrapes ++;
-            
         });
     }
 }
-
 function getAudioFeatures(token, song_id){
     //returns an object with danceability, key, length, tempo
     return makeAudioFeaturesRequest(token, song_id)
-        .then(function(response){
-            response = JSON.parse(response);
-
-            var objectToReturn = {
-                "danceability": response["danceability"],
-                "key": mapNumToKey(response["key"]),
-                "length": convertMillisToSeconds(response["duration_ms"]),
-                "tempo": Math.floor(response["tempo"])
-            }
-            return objectToReturn;
-        });
+    .then(function(response){
+        response = JSON.parse(response);
+        var objectToReturn = {
+            "danceability": response["danceability"],
+            "key": mapNumToKey(response["key"]),
+            "length": convertMillisToSeconds(response["duration_ms"]),
+            "tempo": Math.floor(response["tempo"])
+        }
+        return objectToReturn;
+    });
 }
-
 function getSpotifyFeatures(token, song_name){
     //returns the name, ID, and preview link
     return spotify.searchTracks(song_name)
@@ -200,46 +193,39 @@ function getSpotifyFeatures(token, song_name){
         return objectToReturn;
     });
 }
-
 function test(token, song){
     getSpotifyFeatures(token, song.title).then(function(props){
         getAudioFeatures(token, props["id"]).then(function(properties){
             song.preview_url = props["preview_url"];
             song.score += computeSpotifyScore(properties);
-        })
-    })
+        });
+    });
 }
-
 function computeSpotifyScore(spotify_props){
-    return(
-          (1 - Math.abs(spotify_props.danceability))
-        + (.25                           )//key
-        + (1 - .1 * Math.floor(Math.abs(spotify_props["tempo"])))
-        + (1 - .1 * Math.floor(Math.abs(spotify_props["length"])))
-
-        );
+    var dance = (1 - Math.abs(spotify_props.danceability));
+    var key = 0.25;//You had key in comments here chris, idk why
+    var tempo = (1 - .1 * Math.floor(Math.abs(spotify_props["tempo"])));
+    var length = (1 - .1 * Math.floor(Math.abs(spotify_props["length"])));
+    return (dance+key+tempo+length);
+// (1 - Math.abs(spotify_props.danceability))+ (.25/*key*/)+(1 - .1 * Math.floor(Math.abs(spotify_props["tempo"])))+(1 - .1 * Math.floor(Math.abs(spotify_props["length"])))
+// ); Old formula for safekeeping
 }
-
 function makeAudioFeaturesRequest(token, spotify_song_id){
     return reqPromise.get({ url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + token });
 }
-
 function convertMillisToSeconds(millis){
-
-  var minutes = Math.floor(millis / 60000);
-  var seconds = ((millis % 60000) / 1000).toFixed(0);
-  return minutes * 60 + seconds;
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return minutes * 60 + seconds;
 }
 
 function mapNumToKey(key_number){
     const values = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
     return values[key_number];
 }
-
 /*io.use(sharedSess(session, {
     autoSave: true
 }))*/
-
 // Set up session
 app.use(session({
     secret: 'TrackMasterIsTheBombFuckItShipItImNotGonnaMakeARandomString',
@@ -247,27 +233,22 @@ app.use(session({
         maxAge: 60000
     }
 }));
-
 // Set up body parser
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
 // Basic pages
 app.get('/', function(req, res){
     return res.sendFile(__dirname + '/index.html');
 });
-
 app.get('/login', function(req, res) {
     var scopes = [
         'playlist-read-private',
         'playlist-read-collaborative',
         'playlist-modify-public',
-        'playlist-modify-private',
+        'playlist-modify-private'/*,*/ //I commented out this comma, I don't think it's needed 1:46am Joey
     ];
-
     var state = "I'm not sure what to put here";
-
     //spotify.setRedirectURI('http://trackmaster.me/authorize');
     spotify.setRedirectURI('http://localhost:81/authorize');
     res.redirect(spotify.createAuthorizeURL(scopes, state));
@@ -277,14 +258,11 @@ app.get('/authorize', function(req, res) {
     spotify.authorizationCodeGrant(req.query.code).then(function(data) {
         spotify.setAccessToken(data.body.access_token);
         spotify.setRefreshToken(data.body.refresh_token);
-
         console.log(data.body);
         req.session.spotifyToken = data.body.access_token;
-
         res.redirect('/create');
     });
 });
-
 app.get('/create', function(req, res) {
     io.on('connection',function(client){
         client.on('songinfo', function(info){
@@ -292,10 +270,8 @@ app.get('/create', function(req, res) {
             console.log(info);
         });
     });
-
     return res.sendFile(__dirname + '/create.html');
 });
-
 app.use(express.static('Public'));
 
 http.listen(process.env.PORT || 81, function(){
