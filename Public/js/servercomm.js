@@ -1,7 +1,28 @@
 var server = io();
 //Add socket.io stuff here
 var dataObj = {}
+
+function makePlayers() {
+    $(".player").each(function(ply) {
+        ply = $(ply);
+        var audio = ply.find("audio");
+        var btn = ply.find("img");
+
+        console.log(btn);
+
+        btn.click(function() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        });
+    });
+}
+
 $(document).ready(function(){
+    makePlayers();
+
 	$("#create-btn").click(function(){
         console.log(" iam not a hauaman");
 		dataObj.lyrics = $("#lyrics").val();
