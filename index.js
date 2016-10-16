@@ -24,15 +24,13 @@ var spotify = new SpotifyWebApi({
 
 var url = "http://api.musixmatch.com/ws/1.1/track.search?apikey=239ae28847825fe0dd9589afd57032c1&page_size=100&s_track_rating=desc";
 var firstTime = true;
-var outOfReg = false;
 var remove;
-var compiledList = [];
 
 // Joey's stuff
 function createURL(lyrics,page){
     var lyricKey = lyrics.replace(/ /g, '%');
     return url +  "&q_lyrics=" + lyricKey + "&page="+page;
-}
+}//close CreatURL
 startQuery("This is my fight song");//test statement
 function startQuery(lyrics){
     var page = 1;
@@ -50,7 +48,7 @@ function startQuery(lyrics){
         });
         page++;
     }
-}
+}//close startQuery
 function makeRequest(urlCall,counter,callback){
     var returnData;
     var songList = [];
@@ -82,7 +80,7 @@ function makeRequest(urlCall,counter,callback){
             convertJToC(songList,counter,function(list){});
         }
     });
-}
+}//close makeRequest
 function trimName(song){
     var remove = song;
     if(remove.includes('('))
@@ -92,7 +90,7 @@ function trimName(song){
     if(remove.charAt(remove.length-1) == ' ')
         remove = remove.substring(0,remove.length-1);
     return remove;
-}
+}//close trimName
 var finalSongList = [];
 function convertJToC(songs,counter,callback){
     var song = {
@@ -119,7 +117,7 @@ function convertJToC(songs,counter,callback){
         callback(finalSongList);
         return;
     }
-}
+}//close Convert
 //End Of Node God's Code
 // Calvin's stuff
 var realLimit = 1;
