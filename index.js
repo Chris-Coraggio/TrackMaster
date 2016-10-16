@@ -11,9 +11,6 @@ var reqPromise = require('request-promise');
 var http =require('http').Server(app);
 var io = require('socket.io')(http);
 
-var passwordHash = require('password-hash');
-var passwordGen = passwordHash.generate;
-
 var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyId = 'a385221958aa41d28ece2005e33a9b20';
 var spotifySecret = '033ff04f6e0b4157a67c1870be6f8945';
@@ -33,65 +30,71 @@ var compiledList = [];
 
 // Joey's stuff
 function createURL(lyrics,page){
-	var lyricKey = lyrics.replace(/ /g, '%');
-	return url +  "&q_lyrics=" + lyricKey + "&page="+page;
+    var lyricKey = lyrics.replace(/ /g, '%');
+    return url +  "&q_lyrics=" + lyricKey + "&page="+page;
 }
-//startQuery("This is my fight song");//test statement
+startQuery("This is my fight song");//test statement
 function startQuery(lyrics){
-	var page = 1;
-	while(page <= 3){
-		if(makeRequest(createURL(lyrics,page),convertJToC)==400){
-			console.log("out of stuff");
-		}
-		page++;
-	}
-	while(page <= 5){
-		var newLyricOne = lyrics.substring(0,lyrics.indexOf(" "));
-		var trimmed = lyrics.substring(lyrics.indexOf(" ")+1);
-		var newLyricTwo = trimmed.substring(0,trimmed.indexOf(" "));
-		var newLyrics = newLyricOne + " " + newLyricTwo;
-		makeRequest(createURL(newLyrics, page),convertJToC);
-		page++;
-	}
+    var page = 1;
+    var newLyricOne = lyrics.substring(0,lyrics.indexOf(" "));
+    var trimmed = lyrics.substring(lyrics.indexOf(" ")+1);
+    var newLyricTwo = trimmed.substring(0,trimmed.indexOf(" "));
+    var newLyrics = newLyricOne + " " + newLyricTwo;
+    var acLyr = lyrics;
+    while(page <= 10){
+      console.log("doing dicks in startQuery");
+      if (page>5)
+        acLyr = newLyrics;
+    makeRequest(createURL(acLyr,page),page,function(list){
+        console.log(list); //THIS IS WHERE IT PRINTS IN THE RIGHT PLACE
+    })
+
+    page++;
 }
-function makeRequest(urlCall,callback){
-	var returnData;
-	var songList = [];
-	var code=0;
-	request({
-		url: urlCall,
-		json: true,
-        async: false
-	}, function(error,response,body){
-		code=response.statusCode;
-		if(!error&&code === 200){
-			returnData = JSON.parse(JSON.stringify(body));
-		}
-		if(code == 400 || returnData.message.body.track_list.length==0)
-			return 400;
-		if(firstTime){
-			remove = trimName(returnData.message.body.track_list[0].track.track_name);
-			songList.push(returnData.message.body.track_list[0].track);
-		}
-		for(var i=1;i<returnData.message.body.track_list.length;i++){
-			if(!returnData.message.body.track_list[i].track.track_name.includes(remove)){
-				songList.push(returnData.message.body.track_list[i].track);
-			}
-		}
-		callback(songList);
-	});
+}
+function makeRequest(urlCall,counter,callback){
+    var returnData;
+    var songList = [];
+    var code=0;
+    request({
+        url: urlCall,
+        json: true,
+    }, function(error,response,body){
+        code=response.statusCode;
+        if(!error&&code === 200){
+            returnData = JSON.parse(JSON.stringify(body));
+        }
+        if(code == 400 || returnData.message.body.track_list.length==0)
+            return 400;
+        if(firstTime){
+            remove = trimName(returnData.message.body.track_list[0].track.track_name);
+            songList.push(returnData.message.body.track_list[0].track);
+        }
+        for(var i=1;i<returnData.message.body.track_list.length;i++){
+            if(!returnData.message.body.track_list[i].track.track_name.includes(remove)){
+                songList.push(returnData.message.body.track_list[i].track);
+            }
+        }
+       if(counter == 10){
+        convertJToC(songList,counter,function(list){
+            callback(list);
+        });
+    }
+    else
+        convertJToC(songList,counter,function(list){}); 
+});
 }
 
 function trimName(song){
-	var remove = song;
-	if(remove.includes('('))
-		remove = remove.substring(0,remove.indexOf("("));
-	if(remove.includes('['))
-		remove = remove.substring(0,remove.indexOf("["));
-	if(remove.charAt(remove.length-1) == ' ')
-		remove = remove.substring(0,remove.length-1);
-	return remove;
-}
+    var remove = song;
+    if(remove.includes('('))
+        remove = remove.substring(0,remove.indexOf("("));
+           if(remove.includes('['))
+              remove = remove.substring(0,remove.indexOf("["));
+          if(remove.charAt(remove.length-1) == ' ')
+              remove = remove.substring(0,remove.length-1);
+          return remove;
+      }
 
 // Calvin's stuff
 var realLimit = 1;
@@ -103,25 +106,18 @@ var options = {
     query: 'Instruments used in heathens by the 21 pilots wikipedia',
     limit: 1
 };
-var song = {
-    title: "Heathens",
-    author: "21 Pilots",
-    score: 0,
-    previewLink: ""
-};
-var songList = [];
-function convertJToC(songs){
+var finalSongList = [];
+function convertJToC(songs,counter,callback){
     var song = {
         title: "Heathens",
         author: "21 Pilots",
         score: 0,
         previewLink: ""
     };
-
     for(var i=0;i<songs.length;i++){
         var songToAdd = Object.create(song);
         var songName = songs[i].track_name;
-
+        console.log("Converting dicks");
         if(songName.includes(' (')){
             songName = songName.substring(0,songName.indexOf(' ('));
         }else if(songName.includes('(')){
@@ -129,7 +125,12 @@ function convertJToC(songs){
         }
         songToAdd.title = songName;
         songToAdd.author = songs[i].artist_name;
-        songList.push(songToAdd);
+        finalSongList.push(songToAdd);
+    }
+    if(counter == 10){
+        console.log("doing the callback shit in convert");
+        callback(finalSongList);
+        return;
     }
 }
 function loadInstruments(callback){
