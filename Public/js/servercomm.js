@@ -3,6 +3,7 @@ var server = io();
 var dataObj = {}
 $(document).ready(function(){
 	$("#create-btn").click(function(){
+        console.log(" iam not a hauaman");
 		dataObj.lyrics = $("#lyrics").val();
 		dataObj.instruments = $("#instr-dropdown").val();
 		var sonLen = parseInt($("#tempo").val());
@@ -16,7 +17,8 @@ $(document).ready(function(){
 		dataObj.len = parseInt($("#lengthAffin").val());
 		dataObj.kyA = parseInt($("#keyAffin").val());
 		dataObj.dan = parseInt($("#danceAffin").val());
-		server.emit('songinfo',dataObj);
+
+        server.emit('songinfo', dataObj);
 	});
 	
 });

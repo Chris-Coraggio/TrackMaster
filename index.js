@@ -1,5 +1,6 @@
 var express = require('express');
 var session = require('express-session');
+var sharedSess = require('express-socket.io-session');
 var bodyParser = require('body-parser');
 
 var app = require('express')();
@@ -236,11 +237,9 @@ function mapNumToKey(key_number){
     return values[key_number];
 }
 
-io.on('connection',function(client){
-    console.log("user connected");
-    client.on('songinfo', function(info){
-    })
-});
+/*io.use(sharedSess(session, {
+    autoSave: true
+}))*/
 
 // Set up session
 app.use(session({
@@ -288,9 +287,13 @@ app.get('/authorize', function(req, res) {
 });
 
 app.get('/create', function(req, res) {
-    var token = req.session.spotifyToken;
-    console.log(token);
-    test(token);
+    io.on('connection',function(client){
+        client.on('songinfo', function(info){
+            var token = req.session.spotifyToken;
+            console.log(info);
+        });
+    });
+
     return res.sendFile(__dirname + '/create.html');
 });
 
