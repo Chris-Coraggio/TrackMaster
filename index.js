@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var app = require('express')();
 var scraper = require('google-search-scraper');
 var request = require('request');
+var reqPromise = require('request-promise');
 
 var http =require('http').Server(app);
 var io = require('socket.io')(http);
@@ -38,7 +39,6 @@ function createURL(lyrics,page){
 function startQuery(lyrics){
 	var page = 1;
 	while(page <= 3){
-		console.log("iterating");
 		if(makeRequest(createURL(lyrics,page),convertJToC)==400){
 			console.log("out of stuff");
 		}
@@ -49,7 +49,6 @@ function startQuery(lyrics){
 		var trimmed = lyrics.substring(lyrics.indexOf(" ")+1);
 		var newLyricTwo = trimmed.substring(0,trimmed.indexOf(" "));
 		var newLyrics = newLyricOne + " " + newLyricTwo;
-		//console.log(newLyrics);
 		makeRequest(createURL(newLyrics, page),convertJToC);
 		page++;
 	}
@@ -130,8 +129,6 @@ function convertJToC(songs){
         songToAdd.title = songName;
         songToAdd.author = songs[i].artist_name;
         songList.push(songToAdd);
-
-        console.log(songList[i]);
     }
 }
 function loadInstruments(callback){
@@ -154,21 +151,17 @@ function checkSongs(songList, songMultiplier){
         scraper.search(options, function(err, url){
             if(realLimit > currentScrapes){
                 if(err) throw err;
-                console.log(url);
                 
                 request(url, function(error, response, body){
                     var instrCount = 0;
                     instrumentTxt = body.slice(body.indexOf("Edit section: Personnel"));
-                    console.log(instrumentTxt);
                     for(var i in instrumentList){
-                        console.log(instrumentList[i]);
                         if(instrumentTxt.includes(instrumentList[i])){
                         instrCount ++;
                         }
                     }
 
                     song.score += instrCount * songMultiplier;
-                    //console.log(songList);
                 });
                 
             }
@@ -178,10 +171,12 @@ function checkSongs(songList, songMultiplier){
     }
 }
 
-function getAudioFeatures(song_id){
+function getAudioFeatures(token, song_id){
     //returns an object with danceability, key, length, tempo
-    return makeAudioFeaturesRequest(song_id)
+    return makeAudioFeaturesRequest(token, song_id)
         .then(function(response){
+            response = JSON.parse(response);
+
             var objectToReturn = {
                 "danceability": response["danceability"],
                 "key": mapNumToKey(response["key"]),
@@ -192,10 +187,11 @@ function getAudioFeatures(song_id){
         });
 }
 
-function getSpotifyFeatures(song_name){
+function getSpotifyFeatures(token, song_name){
     //returns the name, ID, and preview link
-    return makeIDRequest(song_name)
-    .then(function(response){
+    return spotify.searchTracks(song_name)
+    .then(function(data){
+        var response = data.body;
         var objectToReturn = {
             "name": response.tracks.items[0]["name"],
             "id": response.tracks.items[0]["id"],
@@ -205,26 +201,16 @@ function getSpotifyFeatures(song_name){
     });
 }
 
-function test(){
-    getSpotifyFeatures("Footloose").then(function(props){
-        getAudioFeatures(props["id"]).then(function(properties){
+function test(token){
+    getSpotifyFeatures(token, "Footloose").then(function(props){
+        getAudioFeatures(token, props["id"]).then(function(properties){
             console.log(properties);
         })
     })
 }
 
-function makeAudioFeaturesRequest(spotify_song_id){
-
-    return request.get({
-            url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + spotify.getAccessToken()
-            });
-}
-
-function makeIDRequest(song_name){
-
-    return request.get({
-            url: "https://api.spotify.com/v1/search/?q=" + song_name + "&type=track"
-            });
+function makeAudioFeaturesRequest(token, spotify_song_id){
+    return reqPromise.get({ url: "https://api.spotify.com/v1/audio-features/" + spotify_song_id + "?access_token=" + token });
 }
 
 function convertMillisToSeconds(millis){
@@ -238,8 +224,6 @@ function mapNumToKey(key_number){
     const values = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
     return values[key_number];
 }
-
-test();
 
 io.on('connection',function(client){
     console.log("user connected");
@@ -273,7 +257,8 @@ app.get('/login', function(req, res) {
 
     var state = "I'm not sure what to put here";
 
-    spotify.setRedirectURI(req.query.redirect);
+    //spotify.setRedirectURI('http://trackmaster.me/authorize');
+    spotify.setRedirectURI('http://localhost:81/authorize');
     res.redirect(spotify.createAuthorizeURL(scopes, state));
 });
 
@@ -281,6 +266,9 @@ app.get('/authorize', function(req, res) {
     spotify.authorizationCodeGrant(req.query.code).then(function(data) {
         spotify.setAccessToken(data.body.access_token);
         spotify.setRefreshToken(data.body.refresh_token);
+
+        console.log(data.body);
+        req.session.spotifyToken = data.body.access_token;
 
         res.redirect('/playlists');
     });
@@ -291,9 +279,9 @@ app.get('/create', function(req, res) {
 });
 
 app.get('/playlists', function(req, res) {
-    spotify.getMe().then(function(data) {
-        console.log(data);
-    });
+    var token = req.session.spotifyToken;
+    console.log(token);
+    test(token);
 });
 
 app.use(express.static('Public'));
