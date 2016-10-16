@@ -2,7 +2,6 @@
 	<head>
 		<title>TrackMaster</title>
 
-		<link rel="stylesheet" href="css/create.css">
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -12,143 +11,142 @@
 		<!-- Our theme -->
 		<link href="https://fonts.googleapis.com/css?family=Lato|Montserrat" rel="stylesheet">
 
+		<link rel="stylesheet" href="css/create.css">
+
 		<!-- Latest compiled and minified JavaScript -->
 		<script src = "https://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	</head>
 
 	<body>
-
-		<div id="content" class="container">
+        <div id="content">
 			<div class="row tophead" id="welcome">
 				<div class="col-md-8">
-					<h1>Trackmaster</h1>
+					<h1 id="app-name">Trackmaster</h1>
 				</div>
-				<div class="col-md-4">
-					<p>Welcome NAME!</p>
-	            </div>
 			</div>
 
-			<div id="selector" class="container">
+            <div id="main-content">
+                <div id="selector" class="container-fluid">
 
-				<div class="row" id="headers-row">
-					<div class="col-md-4">
-						<p class="header">Search By</p>
-					</div>
-					<div class="col-md-4">
-						<p class="header"></p>
-					</div>
-					<div class="col-md-4">
-						<p class="header">Importance Rank</p>
-					</div>
-				</div>
+                    <div class="row" id="headers-row">
+                        <div class="col-md-4">
+                            <p class="header">Search By</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="header"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="header">Importance Rank</p>
+                        </div>
+                    </div>
 
-				<div class="row" id="lyrics-row">
-					<div class="col-md-4">
-						<p>Lyrics:</p>
-					</div>
-					<div class="col-md-4">
-						<input id="lyrics" type="text">
-					</div>
-					<div class="col-md-4">
-						<input type="range" min="5" max="20">
-					</div>
-				</div>
+                    <div class="row" id="lyrics-row">
+                        <div class="col-md-4">
+                            <p>Lyrics:</p>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="lyrics" type="text">
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" type="range" min="5" max="20">
+                        </div>
+                    </div>
 
-				<div class="row" id="instr-row">
-					<div class="col-md-4">
-						<p>Instrument:</p>
-					</div>
-					<div class="col-md-4">
-						<select id="instr-dropdown"></select>
-					</div>
-					<div class="col-md-4">
-						<input type="range" min="5" max="20">
-					</div>
-				</div>
+                    <div class="row" id="instr-row">
+                        <div class="col-md-4">
+                            <p>Instrument:</p>
+                        </div>
+                        <div class="col-md-4">
+                            <center>
+                                <select class="form-control" id="instr-dropdown"></select>
+                            </center>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" type="range" min="5" max="20">
+                        </div>
+                    </div>
 
-				<div class="row" id="tempo-row">
-					<div class="col-md-4">
-						<p>Tempo:</p>
-					</div>
-					<div class="col-md-4">
-						<div class="row">
-							<div class="col-md-2"><label>Slow</label></div>
-							<div class="col-md-8"><input type="range" min="60" max="200"></div>
-							<div class="col-md-2"><label>Fast</label></div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<input type="range" min="5" max="20">
-					</div>
-				</div>
+                    <div class="row" id="tempo-row">
+                        <div class="col-md-4">
+                            <p>Tempo:</p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-2"><label>Slow</label></div>
+                                <div class="col-md-8"><input type="range" min="60" max="200"></div>
+                                <div class="col-md-2"><label>Fast</label></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="range" min="5" max="20">
+                        </div>
+                    </div>
 
-				<div class="row" id="length-row">
-					<div class="col-md-4">
-						<p>Song Length:</p>
-					</div>
-					<div class="col-md-4">
-						<center>
-							<input id="minutes_song" type="text">
-							<label> : </label>
-							<input id="seconds_song" type="text">
-						</center>
-					</div>
-					<div class="col-md-4">
-						<input type="range" min="5" max="20">
-					</div>
-				</div>
+                    <div class="row" id="length-row">
+                        <div class="col-md-4">
+                            <p>Song Length:</p>
+                        </div>
+                        <div class="col-md-4">
+                            <center>
+                                <input class="form-control" id="minutes_song" type="text">
+                                <label> : </label>
+                                <input class="form-control" id="seconds_song" type="text">
+                            </center>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="range" min="5" max="20">
+                        </div>
+                    </div>
 
-				<div class="row" id="keys-row">
-					<div class="col-md-4">
-						<p>Key:</p>
-					</div>
-					<div class="col-md-4">
-						<select id="key-dropdown"></select>
-						<script>
-						const keys = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
-						keys.forEach(function(key){
-							$("#key-dropdown").append("<option>" + key + "</option>");
-						});
-						</script>
-					</div>
-					<div class="col-md-4">
-						<input type="range" min="5" max="20">
-					</div>
-				</div>
+                    <div class="row" id="keys-row">
+                        <div class="col-md-4">
+                            <p>Key:</p>
+                        </div>
+                        <div class="col-md-4">
+                            <center>
+                                <select class="form-control" id="key-dropdown"></select>
+                            </center>
+                            <script>
+                            const keys = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+                            keys.forEach(function(key){
+                                $("#key-dropdown").append("<option>" + key + "</option>");
+                            });
+                            </script>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="range" min="5" max="20">
+                        </div>
+                    </div>
 
-				<div class="row" id="dance-row">
-					<div class="col-md-4">
-						<p>Wanna dance?</p>
-					</div>
-					<div class="col-md-4">
-						<div class="row">
-							<div class="col-md-2"><label>Nah</label></div>
-							<div class="col-md-8"><input type="range" min="0" max="10"></div>
-							<div class="col-md-2"><label>Yeah!</label></div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<input type="range" min="5" max="20">
-					</div>
-				</div>
+                    <div class="row" id="dance-row">
+                        <div class="col-md-4">
+                            <p>Wanna dance?</p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-2"><label>Nah</label></div>
+                                <div class="col-md-8"><input type="range" min="0" max="10"></div>
+                                <div class="col-md-2"><label>Yeah!</label></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="range" min="5" max="20">
+                        </div>
+                    </div>
 
-				<div class="row">
-					<center>
-						<p>How many songs are in your dream playlist?</p>
-						<input type="text" id="numtracks">
-					</center>
-				</div>
+                    <div class="row" id="hackathon-dreams">
+                        <center>
+                            <p>How many songs are in your dream playlist?</p>
+                            <input type="text" id="numtracks">
+                        </center>
+                    </div>
+                    <button id="create-btn">Make My Playlist!</button>
 
-			</div>
-
-			<button id="create-btn">
-			Make My Playlist!
-			</button>
-
-			<div id="playlist-results"></div>
-
-		</div>
+                    <div id="playlist-results"></div>
+                </div>
+            </div>
+        </div>
 
 		<!-- Code starts here -->
 		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
