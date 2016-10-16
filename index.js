@@ -289,7 +289,7 @@ app.get('/create', function(req, res) {
             var token = req.session.spotifyToken;
             //console.log(info);
             setTimeout(function(){
-                console.log(clientList[0].songList);
+                console.log(clientList[0].songList);//Used index 0 because I didn't want to write another for loop but it works for now
             },4000)
             /*THIS ALL WORKS I WILL EXPLAIN IN THE MORNING*/
 
