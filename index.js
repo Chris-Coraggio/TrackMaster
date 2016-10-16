@@ -42,15 +42,14 @@ function startQuery(lyrics){
     var newLyrics = newLyricOne + " " + newLyricTwo;
     var acLyr = lyrics;
     while(page <= 10){
-      console.log("doing dicks in startQuery");
-      if (page>5)
-        acLyr = newLyrics;
-    makeRequest(createURL(acLyr,page),page,function(list){
-        console.log(list); //THIS IS WHERE IT PRINTS IN THE RIGHT PLACE
-    })
-
-    page++;
-}
+        console.log("doing dicks in startQuery");
+        if (page>5)
+            acLyr = newLyrics;
+        makeRequest(createURL(acLyr,page),page,function(list){
+            console.log(list); //THIS IS WHERE IT PRINTS IN THE RIGHT PLACE
+        });
+        page++;
+    }
 }
 function makeRequest(urlCall,counter,callback){
     var returnData;
@@ -75,37 +74,25 @@ function makeRequest(urlCall,counter,callback){
                 songList.push(returnData.message.body.track_list[i].track);
             }
         }
-       if(counter == 10){
-        convertJToC(songList,counter,function(list){
-            callback(list);
-        });
-    }
-    else
-        convertJToC(songList,counter,function(list){}); 
-});
+        if(counter == 10){
+            convertJToC(songList,counter,function(list){
+                callback(list);
+            });
+        }else{
+            convertJToC(songList,counter,function(list){});
+        }
+    });
 }
-
 function trimName(song){
     var remove = song;
     if(remove.includes('('))
         remove = remove.substring(0,remove.indexOf("("));
-           if(remove.includes('['))
-              remove = remove.substring(0,remove.indexOf("["));
-          if(remove.charAt(remove.length-1) == ' ')
-              remove = remove.substring(0,remove.length-1);
-          return remove;
-      }
-
-// Calvin's stuff
-var realLimit = 1;
-var currentScrapes = 0;
-var fs = require('fs');
-var instrumentList
-
-var options = {
-    query: 'Instruments used in heathens by the 21 pilots wikipedia',
-    limit: 1
-};
+    if(remove.includes('['))
+        remove = remove.substring(0,remove.indexOf("["));
+    if(remove.charAt(remove.length-1) == ' ')
+        remove = remove.substring(0,remove.length-1);
+    return remove;
+}
 var finalSongList = [];
 function convertJToC(songs,counter,callback){
     var song = {
@@ -133,15 +120,26 @@ function convertJToC(songs,counter,callback){
         return;
     }
 }
+//End Of Node God's Code
+// Calvin's stuff
+var realLimit = 1;
+var currentScrapes = 0;
+var fs = require('fs');
+var instrumentList
+
+var options = {
+    query: 'Instruments used in heathens by the 21 pilots wikipedia',
+    limit: 1
+};
+
 function loadInstruments(callback){
-     fs.readFile('instruments.txt','utf8', function(err, data){
-	if(err){
-	    return console.log(err)
-	}
-	instrumentList = data.split('\n');
-	 callback();
-     });
-    
+    fs.readFile('instruments.txt','utf8', function(err, data){
+        if(err){
+            return console.log(err)
+        }
+        instrumentList = data.split('\n');
+        callback();
+    });
 }
 
 function checkSongs(songList, songMultiplier){
